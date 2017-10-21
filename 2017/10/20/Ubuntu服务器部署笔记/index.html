@@ -94,6 +94,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/KapTVV7.png">
 <meta property="og:image" content="https://i.imgur.com/KG5dhHm.png">
+<meta property="og:image" content="https://i.imgur.com/5allMYj.png">
 <meta property="og:image" content="https://i.imgur.com/7gooiNK.png">
 <meta property="og:image" content="https://i.imgur.com/2rrG8KY.png">
 <meta property="og:image" content="https://i.imgur.com/URL2ACV.png">
@@ -101,7 +102,7 @@
 <meta property="og:image" content="https://i.imgur.com/6i073ad.png">
 <meta property="og:image" content="https://i.imgur.com/HreBfER.png">
 <meta property="og:image" content="https://i.imgur.com/HsJ2JQn.png">
-<meta property="og:updated_time" content="2017-10-21T01:24:52.760Z">
+<meta property="og:updated_time" content="2017-10-21T08:11:53.056Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu服务器部署笔记">
 <meta name="twitter:description" content="前言最近的项目涉及到多源异构数据的存储问题，所以需要布置了一下服务器，主要记录PostgreSQL，MongoDB，ElasticSearch，Teamviewer等软件的安装问题。">
@@ -331,7 +332,7 @@
 </blockquote>
 <h2 id="JDk安装"><a href="#JDk安装" class="headerlink" title="JDk安装"></a>JDk安装</h2><p>ElasticSearch需要预装JDK，而且JDK是很常用的开发工具，所以先装一下。<br>在这里我们使用使用ppa/源方式安装JDK8<br>添加ppa<br><code>sudo add-apt-repository ppa:webupd8team/java</code> </p>
 <p><code>sudo apt-get update</code>  </p>
-<p>安装oracle-java-installer<br><code>sudo apt-get install oracle-java8-installer</code><br>中途会提示你确任，ok就行了</p>
+<p>安装oracle-java-installer<br><code>sudo apt-get install oracle-java8-installer</code><br>中途会提示你确认，ok就行了</p>
 <p>将当前JDK设置为默认<br><code>sudo update-java-alternatives -s java-8-oracle</code></p>
 <p>测试JDK 是是否安装成功:<br><code>java -version</code></p>
 <p><code>javac -version</code></p>
@@ -342,10 +343,7 @@
 <p>这时候PostgreSQL就已经安装成功并开始运行了，接下来我们要修改默认用户postgres的密码<br><code>sudo -u postgres psql template1</code></p>
 <p>继续输入以下命令修改密码（一定要加分号，因为是sql语句）<br><code>ALTER USER postgres with encrypted password &#39;your_password&#39;;</code></p>
 <p>输入以下命令退出postgreSQL<br><code>\q</code></p>
-<p>这时候我们打开图形化界面pgAdmin3访问PostgreSQL,点击界面左上角的连接图标，输入如下参数：</p>
-<blockquote>
-<p>名称      随便<br>主机名    localhost<br>服务    空<br>维护数据库    postgres<br>用户    postgres<br>密码    你刚刚的密码  </p>
-</blockquote>
+<p>这时候我们打开图形化界面pgAdmin3访问PostgreSQL,点击界面左上角的连接图标，输入如下参数：<br><img src="https://i.imgur.com/5allMYj.png" alt=""></p>
 <p>然后就能成功连接啦，就可以操作数据库了<br><img src="https://i.imgur.com/7gooiNK.png" alt=""></p>
 <h2 id="MongoDB的安装"><a href="#MongoDB的安装" class="headerlink" title="MongoDB的安装"></a>MongoDB的安装</h2><p>安装超简单….  </p>
 <p>打开终端，输入以下命令：<br><code>sudo apt-get install mongodb</code>  </p>
