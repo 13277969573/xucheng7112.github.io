@@ -1,0 +1,709 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言网易云音乐是当前比较流行的音乐网站，每天都会推荐热门歌单，正好自己也喜欢听音乐，就想能不能用python实现一个云音乐歌单的自动获取和通过微博发布的功能。">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python实现网易云热门歌单微博发布">
+<meta property="og:url" content="http://yoursite.com/2016/11/16/Python实现网易云热门歌单微博发布/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言网易云音乐是当前比较流行的音乐网站，每天都会推荐热门歌单，正好自己也喜欢听音乐，就想能不能用python实现一个云音乐歌单的自动获取和通过微博发布的功能。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.imgur.com/ISVeGhH.png">
+<meta property="og:image" content="http://i.imgur.com/cQRuuQV.png">
+<meta property="og:image" content="http://i.imgur.com/4MIi5Fb.png">
+<meta property="og:updated_time" content="2017-01-20T12:16:44.118Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python实现网易云热门歌单微博发布">
+<meta name="twitter:description" content="前言网易云音乐是当前比较流行的音乐网站，每天都会推荐热门歌单，正好自己也喜欢听音乐，就想能不能用python实现一个云音乐歌单的自动获取和通过微博发布的功能。">
+<meta name="twitter:image" content="http://i.imgur.com/ISVeGhH.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/16/Python实现网易云热门歌单微博发布/"/>
+
+  <title> Python实现网易云热门歌单微博发布 | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python实现网易云热门歌单微博发布
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-16T09:39:06+08:00" content="2016-11-16">
+              2016-11-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实战经验/" itemprop="url" rel="index">
+                    <span itemprop="name">实战经验</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/16/Python实现网易云热门歌单微博发布/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/16/Python实现网易云热门歌单微博发布/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><a href="http://music.163.com/" target="_blank" rel="external">网易云音乐</a>是当前比较流行的音乐网站，每天都会推荐热门歌单，正好自己也喜欢听音乐，就想能不能用python实现一个云音乐歌单的自动获取和通过微博发布的功能。<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>简单思路是这样的，用Python每隔一段时间去获取页面信息，然后跟之前获取的信息作比较，如果一样就不管，反之说明有更新，这时候把更新的歌单名，歌单封面，歌单链接通过微博发布出来。</p>
+<p>Python的sinaweibopy提供了一种很方便的途径发送微博，只需要提前去<a href="http://open.weibo.com/development/mobile" target="_blank" rel="external">微博开放平台</a>注册一下，然后申请 应用开发 -&gt; 移动应用 然后根据个人信息填写，之后会收到邮件 里边有app key, app secret  。<br><img src="http://i.imgur.com/ISVeGhH.png" alt=""><br><strong>注意！！ 非常重要！</strong>去应用信息-高级信息里面填写回调页 这是什么我也不知道！但是照着填！我填的是 <a href="https://api.weibo.com/oauth2/default.html" target="_blank" rel="external">https://api.weibo.com/oauth2/default.html</a> 这个需要和之后的python code里面的 callback url一致！！！<br><img src="http://i.imgur.com/cQRuuQV.png" alt=""></p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><blockquote>
+<p>需要用到的包</p>
+<ul>
+<li>time</li>
+<li>sinaweibopy</li>
+<li>requests</li>
+<li>beautifulsoup4</li>
+<li>urllib</li>
+</ul>
+</blockquote>
+<h2 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a>main.py</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="string">"""</span></div><div class="line"><span class="string">Spyder Editor</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">This is a temporary script file.</span></div><div class="line"><span class="string">"""</span></div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> weibo <span class="keyword">import</span> APIClient</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> bs4</div><div class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> urlretrieve</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getmusic</span><span class="params">()</span>:</span></div><div class="line">	url = <span class="string">'http://music.163.com/discover'</span></div><div class="line">	header = &#123;<span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\</span></div><div class="line"><span class="string">	/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'</span>&#125;</div><div class="line">	s = requests.session()</div><div class="line"></div><div class="line">	<span class="keyword">try</span>:</div><div class="line">		<span class="keyword">print</span> <span class="string">'Get music now'</span></div><div class="line">		htmllist = s.get(url,headers=header)</div><div class="line">		bsObjlist = bs4.BeautifulSoup(htmllist.text,<span class="string">'html.parser'</span>)</div><div class="line">		ls = bsObjlist.find_all(<span class="string">'div'</span>,&#123;<span class="string">'class'</span>:<span class="string">'u-cover u-cover-1'</span>&#125;)</div><div class="line">		count = <span class="number">0</span></div><div class="line">		templist = []</div><div class="line">		<span class="keyword">while</span>(count &lt; <span class="number">8</span>):</div><div class="line">			picurl = ls[count].find(<span class="string">'img'</span>).attrs[<span class="string">'src'</span>]</div><div class="line">			picurl = picurl.split(<span class="string">'param'</span>)[<span class="number">0</span>] + <span class="string">'param=400y400'</span></div><div class="line">			title  = ls[count].find(<span class="string">'a'</span>,&#123;<span class="string">'class'</span>:<span class="string">'msk'</span>&#125;).attrs[<span class="string">'title'</span>]</div><div class="line">			aurl   = <span class="string">'http://music.163.com'</span> + ls[count].find(<span class="string">'a'</span>,&#123;<span class="string">'class'</span>:<span class="string">'msk'</span>&#125;).attrs[<span class="string">'href'</span>]</div><div class="line">			temp   = [picurl,title,aurl]</div><div class="line">			templist.append(temp)</div><div class="line">			count += <span class="number">1</span></div><div class="line"></div><div class="line">		<span class="keyword">return</span> templist</div><div class="line">	<span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">		<span class="keyword">print</span> e</div><div class="line">		<span class="keyword">pass</span></div><div class="line">	</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getTitleList</span><span class="params">(templist)</span>:</span></div><div class="line">	tlist = []</div><div class="line">	<span class="keyword">for</span> item <span class="keyword">in</span> templist:</div><div class="line">		tlist.append(item[<span class="number">1</span>])</div><div class="line">	<span class="keyword">return</span> tlist</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_access_token</span><span class="params">(app_key, app_secret, callback_url)</span>:</span>  </div><div class="line">	client = APIClient(app_key=app_key, app_secret=app_secret, redirect_uri=callback_url)  </div><div class="line"></div><div class="line">	auth_url = client.get_authorize_url()  </div><div class="line">	<span class="keyword">print</span> auth_url  </div><div class="line">	  </div><div class="line">	code = raw_input(<span class="string">"Input code:"</span>)  </div><div class="line">	r = client.request_access_token(code)  </div><div class="line">	access_token = r.access_token  </div><div class="line">	expires_in = r.expires_in  </div><div class="line">	<span class="keyword">print</span> <span class="string">'access_token:'</span>,access_token  </div><div class="line">	<span class="keyword">print</span> <span class="string">'expires_in:'</span>, expires_in  </div><div class="line">  </div><div class="line">	<span class="keyword">return</span> access_token, expires_in  </div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	app_key = <span class="string">'3828611682'</span>  </div><div class="line">	app_secret = <span class="string">'905036e24f75c47147da46b0df9e04c0'</span>  </div><div class="line">	callback_url = <span class="string">'https://api.weibo.com/oauth2/default.html'</span>  </div><div class="line">	access_token, expires_in = get_access_token(app_key, app_secret, callback_url) </div><div class="line"></div><div class="line">	client = APIClient(app_key=app_key, app_secret=app_secret, redirect_uri=callback_url)  </div><div class="line">	client.set_access_token(access_token, expires_in) </div><div class="line">	musiclist = []</div><div class="line">	<span class="keyword">print</span> <span class="string">'start'</span></div><div class="line">	<span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">		<span class="keyword">try</span>:</div><div class="line">			templist = getmusic()</div><div class="line">			<span class="keyword">for</span> item <span class="keyword">in</span> templist:</div><div class="line">				<span class="keyword">if</span> <span class="keyword">not</span> item[<span class="number">1</span>] <span class="keyword">in</span> musiclist:</div><div class="line">					<span class="keyword">print</span> <span class="string">'try to send '</span> + item[<span class="number">1</span>]</div><div class="line">					<span class="keyword">try</span>:</div><div class="line">						urlretrieve(item[<span class="number">0</span>],<span class="string">'temp.jpg'</span>)</div><div class="line">						str = item[<span class="number">1</span>] + item[<span class="number">2</span>]</div><div class="line">						f = open(<span class="string">'temp.jpg'</span>, <span class="string">'rb'</span>)  </div><div class="line">						r = client.statuses.upload.post(status=str, pic=f)	</div><div class="line">						f.close()</div><div class="line">						<span class="keyword">print</span> <span class="string">'send '</span> + item[<span class="number">1</span>] + <span class="string">' successfully!'</span></div><div class="line">						<span class="keyword">print</span> <span class="string">'sleep for 30s'</span></div><div class="line">						<span class="keyword">print</span> <span class="string">' '</span></div><div class="line">					<span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">						<span class="keyword">print</span> e</div><div class="line">						<span class="keyword">pass</span></div><div class="line">					time.sleep(<span class="number">30</span>)</div><div class="line">				<span class="keyword">else</span>:</div><div class="line">					<span class="keyword">print</span> item[<span class="number">1</span>] + <span class="string">'  repeated!'</span></div><div class="line">			musiclist = getTitleList(templist)</div><div class="line">			<span class="keyword">print</span> <span class="string">'sleep for 200s'</span></div><div class="line">			<span class="keyword">print</span> <span class="string">' '</span></div><div class="line">			time.sleep(<span class="number">200</span>)</div><div class="line">		<span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">			<span class="keyword">print</span> e</div><div class="line">			<span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<h1 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h1><p><img src="http://i.imgur.com/4MIi5Fb.png" alt=""></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ol>
+<li><p>页面的爬取没有什么难度，有的就是网易云的歌单播放量有的有‘万’字，有的没有，要从有‘万’字的歌单里面挑一个最高的来发布。</p>
+</li>
+<li><p>sinaweibopy目前好像只支持python2，我一直用的3，所以写的过程很蛋疼，电脑换来换去。</p>
+</li>
+<li><p>虽然我设置了20s检测一次，不过网易云的歌单更新还是比较慢的….好几天播放量最高的才换一个，一开始我想推荐歌单里面的歌曲，不过字数超过140了，以后再想想发布的内容更丰富一点。</p>
+</li>
+</ol>
+<blockquote>
+<p>附源码地址：<a href="https://github.com/xucheng7112/weibo" target="_blank" rel="external">https://github.com/xucheng7112/weibo</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/04/Python实现Apriori算法/" rel="prev" title="Python实现Apriori算法">
+                Python实现Apriori算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/11/16/Python实现网易云热门歌单微博发布/"
+     data-title="Python实现网易云热门歌单微博发布"
+     data-content=""
+     data-url="http://yoursite.com/2016/11/16/Python实现网易云热门歌单微博发布/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/16/Python实现网易云热门歌单微博发布/"
+           data-title="Python实现网易云热门歌单微博发布" data-url="http://yoursite.com/2016/11/16/Python实现网易云热门歌单微博发布/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#main-py"><span class="nav-number">3.1.</span> <span class="nav-text">main.py</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#成果"><span class="nav-number">4.</span> <span class="nav-text">成果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,718 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据挖掘,Python,Apriori," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言数据挖掘课程讲到了Apriori关联规则挖掘算法，老师要求完成实验并分析，所以就来写博客啦。">
+<meta name="keywords" content="数据挖掘,Python,Apriori">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python实现Apriori算法">
+<meta property="og:url" content="http://yoursite.com/2016/12/04/Python实现Apriori算法/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言数据挖掘课程讲到了Apriori关联规则挖掘算法，老师要求完成实验并分析，所以就来写博客啦。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.imgur.com/C7r9voS.jpg">
+<meta property="og:image" content="http://i.imgur.com/f2dxIif.png">
+<meta property="og:updated_time" content="2017-01-20T12:17:24.500Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python实现Apriori算法">
+<meta name="twitter:description" content="前言数据挖掘课程讲到了Apriori关联规则挖掘算法，老师要求完成实验并分析，所以就来写博客啦。">
+<meta name="twitter:image" content="http://i.imgur.com/C7r9voS.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/04/Python实现Apriori算法/"/>
+
+  <title> Python实现Apriori算法 | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python实现Apriori算法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-04T13:01:29+08:00" content="2016-12-04">
+              2016-12-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实战经验/" itemprop="url" rel="index">
+                    <span itemprop="name">实战经验</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/04/Python实现Apriori算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/04/Python实现Apriori算法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>数据挖掘课程讲到了Apriori关联规则挖掘算法，老师要求完成实验并分析，所以就来写博客啦。<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Apriori算法是一种挖掘关联规则的频繁项集算法，其核心思想是通过候选集生成和情节的向下封闭检测两个阶段来挖掘频繁项集。而且算法已经被广泛的应用到商业、网络安全等各个领域。  </p>
+<p>实验要求：  </p>
+<blockquote>
+<ul>
+<li>合理的算法开发工具+数据库模式</li>
+<li>给定minsupport，测试算法时间与数据量大小的关系</li>
+<li>给定数据量，测试算法时间与minsupport的关系</li>
+</ul>
+</blockquote>
+<p>我采用的是python3.5+Sql server2012的实验环境，最后图形化实验结果靠的是python的matplotlib库，网上也有很多教程的。</p>
+<p>数据库是随机生成的，数据量分别是1W,2w,5w,10w,20w,50w,100w。形式如下：</p>
+<blockquote>
+<p>A         C    E                        I    J<br>         C    E         F    G    H<br>         C    E    E         G    H    I    J<br>         C    E         F    G    H         J<br>    B    C                   G    H<br>    B    C              F         H         J<br>         C    E                   H    I<br>A    B              E    F         H<br>         C                   G              J<br>….</p>
+</blockquote>
+<h1 id="算法框架"><a href="#算法框架" class="headerlink" title="算法框架"></a>算法框架</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">L1=&#123;large 1-itemset&#125;;    // 生成含有1个项目的频繁集   </div><div class="line">	for (k=2; Lk-1≠Ø; k++) do   </div><div class="line">	&#123;   </div><div class="line">		Ck=Apriori_gen(Lk-1);  </div><div class="line">    	forall transaction t∈D do  </div><div class="line">        &#123;    </div><div class="line">        	Ct=subset(Ck,t);   //产生包含于事务t中的k项目集Ct  </div><div class="line">            forall Candidate c∈Ct  do  </div><div class="line">        		c.count++;     </div><div class="line">		&#125;  </div><div class="line">  		Lk=&#123;c∈Ck∣c.count≥minsup </div><div class="line">	&#125;    </div><div class="line">Answer=Uk Lk;</div></pre></td></tr></table></figure>
+<p>Apriori_gen(Lk-1)的算法步骤：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div></pre></td><td class="code"><pre><div class="line">insert into Ck </div><div class="line">	select p.item1，p.item2，……，p.itemk-1，q.itemk-1</div><div class="line"> 	from Lk-1.p， Lk-1.q</div><div class="line"> 	where p.item1=q.item1，p.item2=q.item2，</div><div class="line">	…，p.itemk-2=q.itemk-2，p.item k-1&lt;q.item k-1；</div><div class="line"></div><div class="line">forall itemsets c∈Ck do</div><div class="line">	forall (k-1)_subsets s of c do</div><div class="line">		if (s not in Lk-1) then </div><div class="line">			delete c from Ck;</div><div class="line">```   </div><div class="line"></div><div class="line"></div><div class="line"># 代码</div><div class="line"></div><div class="line">```python  </div><div class="line"> -*- coding: utf-8 -*-</div><div class="line"></div><div class="line">Created on Sun Nov 20 13:13:08 2016</div><div class="line"></div><div class="line">@author: xc</div><div class="line">&quot;&quot;&quot;</div><div class="line"></div><div class="line">import copy</div><div class="line">import pymssql</div><div class="line">import time</div><div class="line">import csv </div><div class="line"></div><div class="line">def init_data():</div><div class="line">    try:</div><div class="line">        conn = pymssql.connect(host=&quot;localhost&quot;,user=&quot;sa&quot;,password=&quot;12345&quot;, database=&quot;apriori&quot;)            //连接数据库</div><div class="line">    except pymssql.OperationalError:</div><div class="line">        print( &quot;error: Could not Connection SQL Server!please check your dblink configure!&quot;)</div><div class="line">    else:</div><div class="line">        cur = conn.cursor()</div><div class="line">        </div><div class="line">    cur.execute(&quot;select * from tab20&quot;)</div><div class="line">    rows=cur.fetchall()    //读取数据库  取出所有记录</div><div class="line">    conn.close()</div><div class="line">        </div><div class="line">    T=[]</div><div class="line">    count=0</div><div class="line">    for item in rows:</div><div class="line">        T.append([])</div><div class="line">        for i in item:</div><div class="line">            if i != &apos; &apos;:</div><div class="line">                T[count].append(i)</div><div class="line">        count+=1</div><div class="line">        </div><div class="line">    for item in T:</div><div class="line">        print(item)</div><div class="line">        </div><div class="line">    return T</div><div class="line">    </div><div class="line">    </div><div class="line">初始化所有一项集</div><div class="line">def init_pass(T):</div><div class="line">    C = &#123;&#125;  #C为字典</div><div class="line">    for t in T: </div><div class="line">        for i in t:</div><div class="line"></div><div class="line">            if i in C.keys():</div><div class="line">                C[i] += 1</div><div class="line">            else:</div><div class="line">                C[i] = 1</div><div class="line">    return C</div><div class="line"></div><div class="line">def generate(F):</div><div class="line">    C = []</div><div class="line">    k = len(F[0]) + 1</div><div class="line">    for f1 in F:</div><div class="line">        for f2 in F:</div><div class="line">            if f1[k-2] &lt; f2[k-2]:</div><div class="line">                c = copy.copy(f1)</div><div class="line">                c.append(f2[k-2])</div><div class="line">                flag = True</div><div class="line">                for i in range(0,k-1):</div><div class="line">                    s = copy.copy(c)</div><div class="line">                    s.pop(i)</div><div class="line">                    if s not in F:</div><div class="line">                        flag = False</div><div class="line">                        break</div><div class="line">                if flag and c not in C:</div><div class="line">                    C.append(c)</div><div class="line"></div><div class="line">    return C</div><div class="line"></div><div class="line">def compareList(A,B):</div><div class="line">    for a in A:</div><div class="line">        if a not in B:</div><div class="line">            return False</div><div class="line">    return True</div><div class="line">    </div><div class="line">def apriori(T,minSupport):</div><div class="line">    D=[]</div><div class="line">    C=init_pass(T)</div><div class="line">    keys=C.keys();#.keys()方法，求出字典中的索引</div><div class="line"></div><div class="line">    D.append(sorted(keys))#加入D集中</div><div class="line">    F=[[]]</div><div class="line"></div><div class="line">    for f in D[0]:</div><div class="line">        if C[f]&gt;=minSupport:</div><div class="line">            F[0].append([f])</div><div class="line">    k=1</div><div class="line"></div><div class="line">    while F[k-1]!=[]:</div><div class="line">        D.append(generate(F[k-1]))</div><div class="line">        F.append([])</div><div class="line">        count=&#123;&#125;</div><div class="line">        for t in T:</div><div class="line">            i=0</div><div class="line">            for c in D[k]:</div><div class="line">                if compareList(c,t):</div><div class="line">                    if i in count.keys():</div><div class="line">                        count[i] += 1</div><div class="line">                    else:</div><div class="line">                        count[i] = 1</div><div class="line">                i+=1</div><div class="line">        print(count)</div><div class="line">        for i in count:</div><div class="line">            if count[i]&gt;=minSupport:</div><div class="line">                F[k].append(D[k][i])</div><div class="line">        print(F)</div><div class="line">        </div><div class="line">        k+=1</div><div class="line"></div><div class="line">    U = []</div><div class="line">    for f in F:</div><div class="line">        for x in f:</div><div class="line">            U.append(x)</div><div class="line">    return U</div><div class="line"></div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    start=time.clock()</div><div class="line">    T=init_data()</div><div class="line">    Z= apriori(T,100000)       //第二个参数为最小支持度</div><div class="line">    </div><div class="line">    try:</div><div class="line">        datacsv=open(r&apos;C:\Users\xc\Desktop\test.csv&apos;,&quot;w&quot;,newline=&quot;&quot;) </div><div class="line">        csvwriter = csv.writer(datacsv)</div><div class="line">        for item in Z:</div><div class="line">            print(item)</div><div class="line">            csvwriter.writerow(item)</div><div class="line">        datacsv.close()</div><div class="line">    except:</div><div class="line">        pass</div><div class="line">    print(time.clock()-start)</div></pre></td></tr></table></figure></p>
+<h1 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h1><p><img src="http://i.imgur.com/C7r9voS.jpg" alt=""></p>
+<p><img src="http://i.imgur.com/f2dxIif.png" alt=""></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ol>
+<li>从这个实验接触了python与Sql server的连接过程，熟悉使用了pymssql，异常好用。</li>
+</ol>
+<ol>
+<li>python的速度还是不能和C语言之类的比，只能说数据处理更方便，所以我这个程序也好写很多。如果叫我用Java写我是拒绝的。</li>
+</ol>
+<blockquote>
+<p>附源码地址：<a href="https://github.com/xucheng7112/Apriori" target="_blank" rel="external">https://github.com/xucheng7112/Apriori</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据挖掘/" rel="tag">#数据挖掘</a>
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+            <a href="/tags/Apriori/" rel="tag">#Apriori</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/16/Python实现网易云热门歌单微博发布/" rel="next" title="Python实现网易云热门歌单微博发布">
+                <i class="fa fa-chevron-left"></i> Python实现网易云热门歌单微博发布
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/16/Flask + WSGI + Nginx部署服务器/" rel="prev" title="Flask + WSGI + Nginx部署服务器">
+                Flask + WSGI + Nginx部署服务器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/04/Python实现Apriori算法/"
+     data-title="Python实现Apriori算法"
+     data-content=""
+     data-url="http://yoursite.com/2016/12/04/Python实现Apriori算法/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/04/Python实现Apriori算法/"
+           data-title="Python实现Apriori算法" data-url="http://yoursite.com/2016/12/04/Python实现Apriori算法/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法框架"><span class="nav-number">3.</span> <span class="nav-text">算法框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#成果"><span class="nav-number">4.</span> <span class="nav-text">成果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

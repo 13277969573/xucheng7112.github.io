@@ -1,0 +1,814 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,数据挖掘,轨迹处理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言记录了毕业设计的相关工作，基于数据挖掘的出租车行驶最佳路线的选择算法研究。">
+<meta name="keywords" content="Java,数据挖掘,轨迹处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于路网的出租车行驶最优路径的选择算法研究">
+<meta property="og:url" content="http://yoursite.com/2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言记录了毕业设计的相关工作，基于数据挖掘的出租车行驶最佳路线的选择算法研究。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.imgur.com/W5Wun1Z.png">
+<meta property="og:image" content="http://i.imgur.com/PmJsapR.png">
+<meta property="og:image" content="http://i.imgur.com/i8TfMwK.png">
+<meta property="og:image" content="http://i.imgur.com/o2oeBpL.png">
+<meta property="og:image" content="http://i.imgur.com/oPz10KF.png">
+<meta property="og:image" content="http://i.imgur.com/7G9yzEY.png">
+<meta property="og:image" content="http://i.imgur.com/7AWlydj.png">
+<meta property="og:image" content="http://i.imgur.com/A40TjHA.png">
+<meta property="og:image" content="http://i.imgur.com/5MNXprU.png">
+<meta property="og:image" content="http://i.imgur.com/Heq3WpU.png">
+<meta property="og:image" content="http://i.imgur.com/1FNvUpK.png">
+<meta property="og:image" content="http://i.imgur.com/zTriolB.png">
+<meta property="og:image" content="http://i.imgur.com/DGgMDcM.png">
+<meta property="og:image" content="http://i.imgur.com/KbC0SDT.png">
+<meta property="og:updated_time" content="2017-07-03T08:13:09.340Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于路网的出租车行驶最优路径的选择算法研究">
+<meta name="twitter:description" content="前言记录了毕业设计的相关工作，基于数据挖掘的出租车行驶最佳路线的选择算法研究。">
+<meta name="twitter:image" content="http://i.imgur.com/W5Wun1Z.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/"/>
+
+  <title> 基于路网的出租车行驶最优路径的选择算法研究 | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                基于路网的出租车行驶最优路径的选择算法研究
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-03T14:59:35+08:00" content="2017-07-03">
+              2017-07-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实战经验/" itemprop="url" rel="index">
+                    <span itemprop="name">实战经验</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>记录了毕业设计的相关工作，基于数据挖掘的出租车行驶最佳路线的选择算法研究。<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>在做毕设之前老师让我研究了一下在路网上的轨迹问题。具体工作见之前博文，顺着这个思路，我的毕设论文研究问题就选择了路网上的基于路网的出租车行驶最优路径的选择算法研究。我们默认出租车司机会选择最佳最优的路线，因此，我们通过对历史出租车轨迹的提取，来帮助我们计算选择最优路线。</p>
+<h1 id="相关研究工作"><a href="#相关研究工作" class="headerlink" title="相关研究工作"></a>相关研究工作</h1><h2 id="研究背景与意义"><a href="#研究背景与意义" class="headerlink" title="研究背景与意义"></a>研究背景与意义</h2><p>随着社会与计算机技术发展，诸如交通流数据的各种大数据在城市中悄然而生。如果能够对这些数据合理利用，将有助于了解和解决城市中存在的一些问题。目前，许多城市的出租车都安装了GPS设备，每天都会产生了大量的出租车轨迹数据，催生了许多关于智能交通服务的研究，研究表明，出租车轨迹数据的挖掘分析结果可以应用于城市规划、智能交通警察，出租车路径选择优化等，例如打车软件自动为出租车司机提供最优路径。<br>本文认为，出租车司机是经验丰富的司机，他们通常可以根据他们的知识找到最快的路径将乘客送到目的地。选择行车路径时，除了路径的距离外，还需要考虑其他因素，如路面上的时变交通流量，交通信号。因此，这些出租车的历史轨迹，意味着经验丰富的司机的智慧，为数据挖掘提供了一个宝贵的资源。在本文中，本文提出从大量现实的历史GPS出租车轨迹中挖掘智能驾驶方向。如图所示，出租车轨迹在云中聚合并挖掘，以回答普通司机或互联网用户的查询。给出起点和目的地，本文的方法可以根据司机出发时间，并根据从历史的出租车轨迹获取的智能，给用户指出最快的路径。随着出租车轨迹在云中不断更新，给出的路径是最先进的。<br><img src="http://i.imgur.com/W5Wun1Z.png" alt=""></p>
+<h2 id="本文研究内容"><a href="#本文研究内容" class="headerlink" title="本文研究内容"></a>本文研究内容</h2><p>本文针对出租车最优路径推荐问题，采用北京市2012年11月份 1万2千辆出租车52.3GB的时空轨迹数据来进行分析研究。通过对问题的了解和分析，本文提出两个关键性研究问题：<br><strong>路网匹配问题</strong><br>路网匹配是研究路网模型必须首先解决的一个难题。路网匹配是如何将记录的地理坐标与现实世界的逻辑模型进行匹配的问题，通常使用某种形式的地理信息系统。最常见的方法是采集记录的串行位置点（例如来自GPS）并将它们与现有街道图（网络）中的边相关联。以这种方式将观测值与逻辑模型进行匹配，在卫星导航，货运GPS跟踪和运输工程中具有重要应用。<br>结合本文研究内容，我要处理的就是如何将出租车轨迹序列中每个位置点匹配到正确的道路上。我知道出租车轨迹是由一条带有时间戳的GPS点序列构成的，来表示出租车的行驶路径。出租车在道路上行驶，每一个轨迹的GPS点必然对应着一条道路，因此一条GPS点轨迹序列就可以转化成一条道路序列来表示出租车轨迹。<br>本文针对这一问题，我使用网格索引这一技术，提出了一种较为快速的路网匹配方案。  </p>
+<p><strong>出租车行驶路径推荐</strong><br>出租车路径问题研究一直是城市道路信息研究里面的一个热点问题，为出租车提供最优的行驶路径，不仅能节省客人的时间和金钱成本，也能减少能源的消耗和汽车尾气的排放，具有重要的现实意义。文本针对这一问题，提出在路网模型中进行出租车路径的计算，与此同时本文还考虑出租车司机的智慧选择。本文认为大部分出租车司机在行驶时会主动选择最优路径行驶，所以出租车司机的历史轨迹对的路径计算具有很好的指导意义。</p>
+<h2 id="出租车行驶最优路径的选择算法"><a href="#出租车行驶最优路径的选择算法" class="headerlink" title="出租车行驶最优路径的选择算法"></a>出租车行驶最优路径的选择算法</h2><p>随着城市社会的发展与计算机技术的进步，各种各样的大数据流悄然而生，与之而来的各种大数据分析变得越来越热门，出租车轨迹研究是其中一个很热门的研究方向。通过对出租车轨迹的分析，可以帮助城市规划者更好的规划城市，帮助司机出行选择更好的路径。但是现有的出租车行驶路径推荐算法并没有充分利用出租车司机的历史轨迹这一有价值的信息来帮助选择更好的出租车行驶路径。大部分情况下，出租车司机会主动选择最快，最优的路径来行使 。选择路径时，不仅考虑路径距离问题，还要考虑道路的实时流量以及道路变化。这些因素可以从经验丰富的出租车驾驶员处学习，因此出租车的历史轨迹为数据挖掘研究提供了一个宝贵的资源。但是在实际考虑问题时，本文遇到了以下3个挑战。  </p>
+<blockquote>
+<ul>
+<li>建模：由于用户可以选择任意地点作为起点或者目的地，所以不一定会有出租车轨迹恰好通过当前的查询点，所以说如何智慧的回答各种查询是一个挑战。</li>
+<li>数据稀缺性：即使有大量的出租车轨迹数据，也不能保证每一条道路都会被覆盖到，更不能保证被轨迹覆盖的道路上有足够的轨迹来支持算法的运算。</li>
+<li>低采样率问题：为了节省能源，出租车不可能以非常高的频率报告本身坐标，一般为1-2分钟一次，这样就增加了出租车行驶路径的不确定性。  </li>
+</ul>
+</blockquote>
+<p>本文使用大量历史的出租车轨迹模拟了具有时间依赖的地标图，其中的节点（地标）代表出租车经常穿过的道路。基于这张地标图，本文执行两阶段算法，第一阶段在地标图中搜索概略路径（用地标来表示），第二阶段顺序连接补全这些地标间的详细路径。本文的主要贡献在以下几个方面。</p>
+<blockquote>
+<ul>
+<li>本文提出了一个高效简便的路网匹配（Map Matching）算法，综合考虑精确度与时间效率，大大减少计算量。</li>
+<li>本文提出了地标图的概念，能够很好的模拟、提取历史出租车轨迹中的信息，帮助计算出租车路径。</li>
+<li>对两地之间行驶所需时间加以分类，建立了根据时间动态变化的地标图网络。</li>
+</ul>
+</blockquote>
+<h2 id="基于路网的出租车最优路径选择算法"><a href="#基于路网的出租车最优路径选择算法" class="headerlink" title="基于路网的出租车最优路径选择算法"></a>基于路网的出租车最优路径选择算法</h2><p>首先定义一些本文中需要使用的术语，然后定义最优路径。<br><strong>定义1（道路）</strong>：道路r是一条单向或双向的边，具有两个端点（r.s，r.e）和一系列折线点来表示道路的曲折。具有方向属性r.dir。如果dir为单向则只能从r.s到r.e，否则可以双向来往。  </p>
+<p><strong>定义2（路网）</strong>：道路网络G是有向图G=（G，E），其中V是表示真实道路段的节点的一组点，E表示真实路网中的路段。本质上就是将现实生活中的地图用数据结构中的图结构来表示。</p>
+<p><strong>定义3（路径）</strong>：路径R是一组首尾相接的道路，表示成R：r1→r2→……rn,其中rk+1.s=rk.e，(1≤k≤n)。</p>
+<p><strong>定义4（出租车轨迹）</strong>：出租车轨迹Tr是出租车行驶产生的一系列GPS点。 每个点p由经度，纬度和时间戳组成，即Tr：p1→p2→⋅⋅→pn。 </p>
+<p>问题定义：给定具有起点qs，目的地qd和出发时间t的用户查询，在网络G=（V，E）中找到耗时最短的路径R。</p>
+<h3 id="算法框架"><a href="#算法框架" class="headerlink" title="算法框架"></a>算法框架</h3><p>整个算法分为三个部分：轨迹预处理，地标图构造和路径计算。前两个部分只需要离线执行一次，然后就可以重复计算路径，除非有新的轨迹数据到来。  </p>
+<blockquote>
+<ul>
+<li>轨迹预处理：首先我将轨迹切割，然后将每段轨迹与路网相匹配。1）轨迹切割：使用的轨迹数据是北京一万多辆出租车连续一个月的GPS记录，首先我要对其进行切割提取，提取出租车运行的轨迹片段而去除那些类似停车，待客等等无用的轨迹片段。2）地图匹配：接着对有效的轨迹片段进行地图匹配，将每一个GPS点映射到相应的道路，从而方便在路网中计算。本文采用自行研究实现的Map Matching算法，综合考虑了匹配精度和时间效率。</li>
+<li>地标图构造：本文将平日与周末分开，并分别为平日和周末建立了一个地标图。在构建地标图时，首先选择具有相对较多预测（即乘坐出租车经常穿过）的路段作为地标。然后，如果有一定数量的轨迹通过这两个地标，则连接两个地标。接着，本文使用分类来计算不同时间段从一个地标到达另一个地标所需时间。</li>
+<li>路径计算：给定一个查询（qs，qd，t），本文执行两阶段算法来找出最快的路径。在第一阶段，执行概略的路径算法，搜索时间相关的地标图，以获得由一系列地标表示的最快的概略路径。在第二阶段，执行精确的路径算法，该算法计算了真正的道路网络中的路径，以便顺序地连接概略路径中的地标。<br>下图显示了整个算法框架的工作原理。如图所示，首先利用路网加上出租车轨迹数据，生成地标图，然后先进行出租车概略路径的计算，再进行出租车详细路径的计算。</li>
+</ul>
+</blockquote>
+<p><img src="http://i.imgur.com/PmJsapR.png" alt=""></p>
+<h3 id="轨迹预处理"><a href="#轨迹预处理" class="headerlink" title="轨迹预处理"></a>轨迹预处理</h3><p>轨迹预处理，主要是执行对数据进行数据切割和路网匹配两种操作。  </p>
+<h4 id="轨迹切割"><a href="#轨迹切割" class="headerlink" title="轨迹切割"></a>轨迹切割</h4><p>轨迹数据是由一万多辆出租车连续一个月的GPS+时间戳序列构成的集合文件。在这一阶段，首先要提取有用的轨迹片段，也就是真正行车的轨迹片段，具体操作步骤如下。</p>
+<blockquote>
+<ul>
+<li>将轨迹数据集按照日期进行切割，同一天的数据集在一起，共切分成30份文本文件。</li>
+<li>遍历每一天的轨迹文件，将车辆状态为停车，待客的轨迹数据去除，只保留下载客的轨迹片段。</li>
+</ul>
+</blockquote>
+<h4 id="路网匹配"><a href="#路网匹配" class="headerlink" title="路网匹配"></a>路网匹配</h4><p>路网匹配是路网研究方面必须解决的一个问题，也就是将车辆的以GPS点序列表示的轨迹转换成用道路序列来表示。对于这个问题国内外一直有人在研究，本文采用了一种较为简洁高效的路网匹配算法来解决这一问题。<br>根据定义1，道路是以起点和终点，再加上一系列的中间点来表示的折线段。本文认为，对于当前的GPS轨迹点，其最靠近的道路便为其目标匹配对象。于是问题便转化为求取当前GPS点最靠近的道路。考虑到道路是曲折的而不是直线，并且不能直接用点到直线的距离来计算，所以本文直接寻找当前GPS轨迹点最靠近的道路点（包括道路的起点终点和中间的折线点），GPS轨迹点最靠近哪个道路点，则当前GPS轨迹点便被匹配到这条道路。下图显示了整个匹配过程，最终当前GPS点匹配到道路r1。<br><img src="http://i.imgur.com/i8TfMwK.png" alt=""></p>
+<p>具体步骤如下：  </p>
+<blockquote>
+<ul>
+<li>获取整张路网所有的组成道路的点。</li>
+<li>为整张路网建立空间网格索引，将点撒进对应的网格内。</li>
+<li>计算当前GPS轨迹点所在的网格获取该网格索引。</li>
+<li>取出该网格内所有点，计算GPS轨迹点与网格内所有点的欧几里得距离，与GPS距离最近的道路点所在的道路即为该GPS点的匹配对象。</li>
+</ul>
+</blockquote>
+<p>若GPS点所在的网格内取出来的点集为空集，则放弃该点。本文认为在一个网格内未匹配到对应的道路，则该轨迹点已远远偏离道路，将此点作为噪音作废。至此，GPS轨迹序列集已经转化成用于路网处理的道路序列数据集。</p>
+<h3 id="地标图构造"><a href="#地标图构造" class="headerlink" title="地标图构造"></a>地标图构造</h3><h4 id="构造地标图"><a href="#构造地标图" class="headerlink" title="构造地标图"></a>构造地标图</h4><p><strong>定义5（地标）</strong>：地标是根据历史轨迹统计出的经常由出租车司机穿过的路段。<br>本文提出地标这一概念是基于：1）在人们的日常出行中，更习惯于使用地标来表示路径，比如“从文苑路出发，经过仙隐北路到玄武大道，再到新街口”，而不是告诉司机先左转再右转。2）由于轨迹的低采样率，不能计算出租车通过每条路花费的时间，只能计算出租车从一个地标到另一地标所花的时间。因此，本文将地标作为节点，提出了地标图的概念。</p>
+<p><strong>定义6（候选地标边）</strong>：给定两个地标uv和轨迹数据集TDB，将e=（u，v； Tuv）称为一条候选边，其中Tuv={(ta, tl) | tl∈Tr &amp;&amp; ta∈Tr}，ta和tl表示同一条轨迹穿过地标u和v的到达时间和离开时间，而Tuv是所有轨迹到达和离开时间的集合。用e.support来表示全部的穿过uv的轨迹次数。</p>
+<p><strong>定义7（地标边）</strong>：给定候选地标边e和最小阈值δ，如果e.support≥δ，则𝑒是一个地标边。</p>
+<p><strong>定义8（地标图）</strong>：地标图Gl=（Vl，El）是一个有向图，由一组地标（由k调整）和一组地标边组成(由δ和tmax调节的)。</p>
+<p>阈值δ用于消除出租车很少穿过的地标边，因为通过两个地标的出租车越少，估计的行驶时间（两个地标之间）的准确度就越低。 此外，本文设置tmax值以去除行进时间很长的地标边。 由于采样率低的问题，有时候，出租车可能连续地穿过三个地标，而通过中间（第二个）地图时没有记录任何点。 这将导致第一和第三地标之间的旅行时间非常长。 这种边缘不仅会增加地标图的空间复杂性，而且还会使旅行时间估计带来不准确（因为地标之间的距离越远导致越过路径的不确定性越高）。<br>下图说明了建立地标图的一个例子。如果设置k= 4，则具有最高匹配密度的前4条路段（r1，r3，r6，r9）被检测为地标。注意，单个轨迹（Tr4）的连续点（如p3和p4）只能对路段计数一次（r10）。这样做是为了处理一辆出租车卡在交通堵塞状态，或者等待在同一路段上可能会记录多个点的交通信号灯（虽然的士司机只穿过一次）的问题。在检测到地标后，将每个出租车轨迹从一系列路段转换为地标序列，然后如果两个地标之间的过渡符合定义7（假设本例中为δ= 1），则将两个地标连接起来。下文显示了地标图建设的详细算法，其中𝑀是道路段序列的集合（从原始出租车轨迹经过Map Matching得来）。<br><img src="http://i.imgur.com/o2oeBpL.png" alt=""></p>
+<blockquote>
+<p><strong>算法1</strong>:地标图构造算法<br><strong>输入</strong>: 路网 Gr,路网匹配后的轨迹序列M,地标的数量k,阈值δ和tmax<br><strong>输出</strong>:地标图 GL  </p>
+<p><strong>1</strong> 令E为地标边集合，E=Ф,初始化Count[ ]为0;<br><strong>2</strong> foreach 轨迹序列 S ∈ M do<br><strong>3</strong>   &#8195; foreach 道路 r ∈ S do<br><strong>4</strong>      &#8195;&#8195;  Count[r]++;      &#8195;  //当前道路密度+1<br><strong>5</strong> 统计Count[ ]数组中密度最高的K个道路，作为地标<br><strong>6</strong> foreach 轨迹序列 S ∈ M do<br><strong>7</strong>  &#8195; 将轨迹序列S转化为用地标表示的轨迹序列S<br><strong>8</strong>    &#8195;for i from 1 to |S|-1 do<br><strong>9</strong>        &#8195;&#8195;将轨迹S的第i条数据赋给u，将轨迹S的第i+1条数据赋给v;<br><strong>10</strong>      &#8195;&#8195; if v.t – u.t &lt;tmax then<br><strong>11</strong>       &#8195;&#8195;&#8195;   if euv = (u,v; Tuv ) ∉ E then<br><strong>12</strong>           &#8195;&#8195;&#8195;&#8195;    将euv加入集合E<br><strong>13</strong>          &#8195;&#8195;&#8195; euv.supp++;         &#8195;   //euv支持数+1<br><strong>14</strong>          &#8195;&#8195;&#8195; Tuv.Add((u.t,v.t)) &#8195; //保存到达时间和离开时间<br><strong>15</strong> foreach 每一条候选边e ∈E do<br><strong>16</strong>   &#8195; if e.freq&lt; δ then          &#8195; //判断候选边的频率是否小于阈值<br><strong>17</strong>       &#8195;&#8195; E.Remove(e);        &#8195;     //去除不符合条件的<br><strong>18</strong> return 地标图GL;  </p>
+</blockquote>
+<h4 id="行走时间估计"><a href="#行走时间估计" class="headerlink" title="行走时间估计"></a>行走时间估计</h4><p>通过观察（从出租车轨迹），不同的工作日（例如星期二和星期三）几乎分享类似的交通模式，而平日和周末有不同的模式。 因此，本文分别为工作日和周末建立了两个不同的地标图。 也就是说，本文将所有的工作日轨迹（从不同的星期和月份）放在一个工作日地标图，并将所有的周末轨迹放在周末地标图中。例如要估计周末地标图上午9时从地标u到达地标v所花时间。本文采取以下步骤。  </p>
+<blockquote>
+<ul>
+<li>若地标u和v之间不存在地标边，则标记两地之间不直接可达</li>
+<li>取地标边euv，统计Tuv中所有周末上午9时通过的数据，计算从u到达v所花时间的数据集</li>
+<li>取数据集的众数作为估计的在周末上午9时从u到达v所需时间 </li>
+</ul>
+</blockquote>
+<h3 id="最优路径计算"><a href="#最优路径计算" class="headerlink" title="最优路径计算"></a>最优路径计算</h3><p>在计算最优路径时，我们实施两阶段算法，先计算出一条概略路径，再对概略路径进行补全。</p>
+<h4 id="概略路径计算"><a href="#概略路径计算" class="headerlink" title="概略路径计算"></a>概略路径计算</h4><p>在概略路径计算中，首先搜索m个（在本文的系统中，设置m= 3）最靠近的地标（使用空间索引），并产生m*m对地标。对于每对地标，计算出其通行的时间花费。最后取时间成本最低的路径。<br>例如，在图5中，如图5-a如果从t= 0开始，从qs到qd的最快路径是qs→e1→qd。该路径的总时间为0.1 + 1 + 0.1 = 1.2。然而，如果从t= 1开始，如图5-b，路径qs→e2→qd现在成为最快的概略路径，因为随着时间的变化，地标边的权值也会随之变化。<br><img src="http://i.imgur.com/oPz10KF.png" alt=""></p>
+<p>伪代码实现如下：</p>
+<blockquote>
+<p><strong>算法2</strong>：地标图最短路径计算<br><strong>输入</strong>：地标图GL=（V，E），起点qs终点qd，出发时间t<br><strong>输出</strong>：概略路线R  </p>
+<p><strong>1</strong> 初始化dist[][]数组和path[][]数组<br><strong>2</strong> foreach 顶点 v ∈ V do<br><strong>3</strong>    &#8195;dist[v][v] = 0<br><strong>4</strong> foreach edge e=(u,v) ∈ E do<br><strong>5</strong>    &#8195;dist[u][v] ← w(u,v,t)  // 获取边e在当前时刻t的权值<br><strong>6</strong>    &#8195;path[i][j] = -1;    //初始化path的值<br><strong>7</strong> for k from 1 to |V| do<br><strong>8</strong>     &#8195;for i from 1 to |V| do<br><strong>9</strong>       &#8195; &#8195; for j from 1 to |V| do<br><strong>10</strong>         &#8195; &#8195; &#8195;  if dist[i][j] &gt; dist[i][k] + dist[k][j]<br><strong>11</strong>           &#8195; &#8195; &#8195; &#8195;  dist[i][j] ← dist[i][k] + dist[k][j]// 更新dist数组<br><strong>12</strong>           &#8195; &#8195; &#8195; &#8195;  path[i][j] = k;    //记录路径<br><strong>13</strong>        &#8195; &#8195; &#8195;  end if<br><strong>14</strong> qs，qd匹配到对应的地标uv，初始化结果集result<br><strong>15</strong> findPath(u,v,)<br><strong>16</strong>         &#8195;k = path[u][v];  //获取节点<br><strong>17</strong>         &#8195;if k == -1  //递归结束条件<br><strong>18</strong>         &#8195; &#8195;    return;<br><strong>19</strong>         &#8195;findPath(u, k, path); // 递归查找最短路径序列<br><strong>20</strong>         &#8195;result.add(k);<br><strong>21</strong>         &#8195;findPath(k, v, path);<br><strong>22</strong>    return result  </p>
+</blockquote>
+<h4 id="详细路径计算"><a href="#详细路径计算" class="headerlink" title="详细路径计算"></a>详细路径计算</h4><p>这个阶段在真正的道路网中寻找一条详细的最快路径。前一阶段已经获取到了一条概略路径，在这一章的任务就是将概略路径中的两两地标ri和ri+1进行补全，就能得到最终路径。对此，本文提出了一个用于局部区域路径计算的算法，下图显示算法执行过程，具体步骤如下。</p>
+<blockquote>
+<ul>
+<li>为整张路网建立网格索引</li>
+<li>计算地标ri和ri+1所在的网格的索引坐标</li>
+<li>根据索引坐标确立ri和ri+1的外接矩形（不一定最小，可适当扩大）</li>
+<li>获取当前矩形区域所有道路，建立一张局部路网</li>
+<li>在局部路网内实施最短路径Floyd算法  </li>
+</ul>
+</blockquote>
+<p>算法的主要思想就是利用网格索引获得当前两个地标所在的局部区域，然后进行最短路线计算，路线计算部分与算法2类似，这里不再赘述。<br><img src="http://i.imgur.com/7G9yzEY.png" alt=""></p>
+<h3 id="实验评价与性能分析"><a href="#实验评价与性能分析" class="headerlink" title="实验评价与性能分析"></a>实验评价与性能分析</h3><p>截取部分实验可视化结果如图a~d四幅图所示<br><img src="http://i.imgur.com/7AWlydj.png" alt=""></p>
+<p>针对以上实验结果有以下几点说明  </p>
+<blockquote>
+<ul>
+<li>由上图可发现出现了很多两个点重叠在一起的情况，针对这种情况，我猜想例如同一个路口可能被切割成东南西北四个点，假如由东向西穿过这个路口，就会将东西两个点都包含进去。</li>
+<li>本文产生的结果点集所使用的点都是道路源文件中的道路起点或终点，可是图中有些点并不处于路段的起点或终点，这个可能是道路数据与服务器地图数据之间存在误差导致的。</li>
+<li>仔细观察图c，我发现起点终点之间存在一条直线路径，可是给出的推荐路径却进行了绕路，再仔细观察c图发现被绕过去的道路是一个交叉路口，我猜测由于交叉路口车流量巨大，所以算法自动选择绕过这一条路，这就是本文所提出的根据出租车司机的智慧来帮助选择路径。</li>
+</ul>
+</blockquote>
+<p><img src="http://i.imgur.com/A40TjHA.png" alt=""><br>上图左边表格对比显示了路标Top-K中K和路网边的阈值δ之间的关系，很明显，定义K不变，地标图中地标边的数量随着地标边阈值的降低而提高，更多的地标边符合阈值的条件。可是当定义δ不变，我发现随着K的提高地标边的数量不再提高，也就是说如图K=500已经能够完全覆盖所有有效的地标边，所有K没有必要再取更大的值。<br>上图右边显示了算法三个步骤各自消耗的时间（三个步骤分别为地标图构造，概略路径计算，详细路径计算。轨迹预处理的时间不计算在内）。可以发现地标图构造占用了整个算法99%以上的时间，真正的计算路径花费时间相当少，可以忽略不计。所以我将地标图构造好的数据作为中间文件保存到本地磁盘，这样每次运行系统，只需花费少量的时间读取文件，然后就能直接进入运算，这大大提高了整个系统的效率。除非有新的轨迹到来，将轨迹重新计算生成新的地标图。</p>
+<h3 id="本章小结"><a href="#本章小结" class="headerlink" title="本章小结"></a>本章小结</h3><p>本章详细描述了本文解决出租车最优路径推荐问题的解决方案，然后按照解决框架的三步骤的顺序详细描述了每个步骤各自完成的任务，细致的分析了为了完成每个步骤所需要实施的算法。在轨迹与处理阶段，本文提出了一种较为简便高效的Map Matching的算法来处理路网匹配问题,在减少计算时间的同时也取得了较好的匹配精度。在对整个模型建模时，本文提出了地标图的概念来提取出租车轨迹中的信息，模拟出租车行驶路径，帮助解决出租车最优路径计算问题。在计算出租车路径时，本文采用两阶段的算法，首先计算出耗时最短的概略路径，然后再将概略路径转化为详细路径生成最终结果。为了检验推荐的路径，本文建立了Geoserver+PostgreSql的可视化系统来发布生成的路径。实验结果表明，本文的实验取得了较好的实验成果，推荐的路径是行而有效并且具有出租车司机智慧的。</p>
+<h1 id="出租车最优路径推荐系统设计"><a href="#出租车最优路径推荐系统设计" class="headerlink" title="出租车最优路径推荐系统设计"></a>出租车最优路径推荐系统设计</h1><h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><p>本系统主要包含数据管理层、业务逻辑层、数据可视化层，如图9所示。<br>本系统的开发环境为： 操作系统选用Window10，后台数据库选用PostgreSQL，Web服务器选用Geoserver。开发语言选用Java。整个系统的思路为：业务逻辑层（Java实现）读取轨迹数据（TXT）进行处理，计算路径，将路径结果直接存入PostgreSql数据库，前端地图服务器直接访问PostgreSql数据库读取路径数据并发布。<br><img src="http://i.imgur.com/5MNXprU.png" alt=""></p>
+<h2 id="数据管理模块"><a href="#数据管理模块" class="headerlink" title="数据管理模块"></a>数据管理模块</h2><p>轨迹文件直接以文本文件格式存储在磁盘上，可以直接读取。然后为了保存路径数据并要求能与前端进行交互，我最终选择PostgreSql数据库来存储数据。<br>PostgreSQL是一个功能强大的开源数据库系统。经过长达15年以上的积极开发和不断改进，PostgreSQL已在可靠性、稳定性、数据一致性等获得了业内极高的声誉。目前PostgreSQL可以运行在所有主流操作系统上，包括Linux、Unix（AIX、BSD、HP-UX、SGI IRIX、Mac OS X、Solaris和Tru64）和Windows。PostgreSQL是完全的事务安全性数据库，完整地支持外键、联合、视图、触发器和存储过程（并支持多种语言开发存储过程）。它支持了大多数的SQL:2008标准的数据类型，包括整型、数值型、布尔型、字节型、字符型、日期型、时间间隔型和时间型，它也支持存储二进制的大对像，包括图片、声音和视频。  PostgreSQL对很多高级开发语言有原生的编程接口，如C/C++、Java、.Net、Perl、Python、Ruby、Tcl 和ODBC以及其他语言等，也包含各种文档。<br>PostgreSQL还有另一大优势，可加载PostGIS插件具有时空索引的功能。<br>PostGIS是对象关系型数据库系统PostgreSQL的一个扩展，PostGIS提供如下空间信息服务功能：空间对象、空间索引、空间操作函数和空间操作符。同时，PostGIS遵循OpenGIS的规范。  </p>
+<h2 id="业务逻辑模块"><a href="#业务逻辑模块" class="headerlink" title="业务逻辑模块"></a>业务逻辑模块</h2><p>业务逻辑分为三个模块：轨迹预处理模块，地标图构造模块与路径计算模块。分别就对应了解决框架的三个步骤，为它们的具体实现。<br><img src="http://i.imgur.com/Heq3WpU.png" alt=""></p>
+<h2 id="数据可视化模块"><a href="#数据可视化模块" class="headerlink" title="数据可视化模块"></a>数据可视化模块</h2><p>在数据可视化方面我选用Geoserver这一服务来实现。<br>GeoServer的是一个基于Java的软件，它允许用户查看和编辑地理空间数据，使用开放地理空间联盟（OGC）提出的开放标准，为地图创建和数据分享提供了强大的便利性。 GeoServer是OpenGIS Web 服务器规范的 J2EE 实现，利用 GeoServer 可以方便的发布地图数据，允许用户对特征数据进行更新、删除、插入操作，通过 GeoServer 可以比较容易的在用户之间迅速共享空间地理信息。<br>主要特性：兼容WMS和WFS特性；支持PostGIS、Shapefile、ArcSDE、 Oracle、VPF、MySQL、MapInfo；支持上百种投影；能够将网络地图输出为jpeg、 gif、png、SVG、KML等格式；能够运行在任何基于J2EE/Servlet 容器之上嵌入 MapBuilder支持AJAX的地图客户端OpenLayers；除此之外还包括许多其他的特性。</p>
+<h2 id="系统运行展示"><a href="#系统运行展示" class="headerlink" title="系统运行展示"></a>系统运行展示</h2><p>首先我们在控制台启动系统，然后输入起点和终点的经纬度，出发时间由系统自动获取当前时间。<br><img src="http://i.imgur.com/1FNvUpK.png" alt=""></p>
+<p>路径计算完毕后，路径数据会被自动导入到PostgreSql的数据库。<br><img src="http://i.imgur.com/zTriolB.png" alt=""></p>
+<p>接着我们打开Geoserver服务器，选择对应的工作区和当前结果所在的数据表，将其发布。<br><img src="http://i.imgur.com/DGgMDcM.png" alt=""></p>
+<p>然后我们就能在Layer Preview区找到发布的地图显示，整张路网用线段来表示整个北京市的地图，用点序列来表示计算出的从起点到终点的最优路径。<br><img src="http://i.imgur.com/KbC0SDT.png" alt=""></p>
+<h2 id="本章小结-1"><a href="#本章小结-1" class="headerlink" title="本章小结"></a>本章小结</h2><p>本章详细介绍了整个出租车最优路径推荐系统的框架。整个系统使用传统的三层框架结构，将整个业务划分为界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）。数据访问层实现了对轨迹数据的访问控制，为业务逻辑层或表示层提供数据服务，可访问二进制文件，数据库，文本文件或者XML文档等。业务逻辑层实现了本文提出的基于出租车司机智慧的轨迹推荐算法。业务逻辑层在三层体系架构中的位置很关键，处于表示层和数据层的中间，起到了数据承上启下的作用。表示层是最接近用户的一层，用于界面的显示和用户输入数据的接收，为用户提供了一种交互式的界面。本文的表示层主要负责实时最佳路径的可视化展现。<br>总体来说，用三层架构来构建整个系统，具有结构明确，降低层与层依赖，利于各层逻辑复用等优点，后期维护时，也能极大的降低维护成本和维护时间。</p>
+<h1 id="总结与展望"><a href="#总结与展望" class="headerlink" title="总结与展望"></a>总结与展望</h1><p><strong>总结</strong><br>在完成毕设的过程中，我确实有很多体会。<br>首先，我对“数据”有了更多的理解，大数据不只是数据量“大”而已，数据量的大带来了存储以及查询等等需要研究的方面；不仅如此，数据挖掘涉及的数据种类繁多，带来对数据的处理也各不相同。<br>其次，在编写路网模型时，我意识到路网模型与传统图模型的不同，不同之处就是数据量之大。原本在图上实现的最短路径，遍历等基本操作，到了路网这张图上变得很复杂，甚至不可能。比如我在实现Floyd最短路径算法时，把整张地图放进去，内存直接溢出。面对这种问题，我学会了去查更多论文，寻求解决办法，或者算法优化等等。<br>在分析实验效果时候，我才意识到数据可视化对于数据挖掘的重要性，前期搭建了一个GeoServer的本地地图服务器，到现在觉得远远不够，好的数据可视化软件对你的研究能起到事半功倍的效果。<br>本文提出了一种方法，通过对出租车司机大量历史的出租车轨迹数据分析提取，给出了在给定的出发时间内，到达目的地的最优路径。在本文的方法中，首先构建一个时间依赖的地标图，然后基于该图执行两阶段路径算法，找到最快的路径。我建立了一个系统，使用了在1个月的时间内，由一万多辆出租车产生的真实世界GPS轨迹，最终实现了出租车最佳路径的推荐。<br>总而言之，数据挖掘总是建立在一定的现实基础上的，故具体的场景是数据挖掘一切工作的出发点和落脚点。在研究过程中，既要把握事件的通性，同时也应该将具体的算法建立在对数据以及事件的深入理解上。由此，便会产生很多具体的问题——数据的处理，模型设计等等，这些正是今后有待学习的部分。  </p>
+<p><strong>展望</strong><br>出租车路径推荐是当前比较成熟的一种服务了，类似滴滴，快的打车都会直接在地图上为司机规划好路径。相比这些大公司的算法体系，我做的研究只是一点皮毛。但是受到这些软件的启发，我觉得可以做一个在线的实时出行路径查询系统。用户在web页面中的地图上点击或者搜索起点或者终点，服务器能立即返回最优路径并在web页面上显示出来。这可以帮助初来乍到或者不经常开车的司机在短时间内获取最佳出行路径，方便人们的生活。我希望能够继续学习数据挖掘知识，将数据挖掘过程中挖掘到的有价值的信息提供给人们使用。</p>
+<p>附源码地址：<a href="https://github.com/xucheng7112/TaxiRoute" title="TaxiRoute" target="_blank" rel="external">TaxiRoute</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/数据挖掘/" rel="tag">#数据挖掘</a>
+          
+            <a href="/tags/轨迹处理/" rel="tag">#轨迹处理</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/26/Postgresql+Geoserver搭建本地地图服务器(二)/" rel="next" title="Postgresql+Geoserver搭建本地地图服务器(二)">
+                <i class="fa fa-chevron-left"></i> Postgresql+Geoserver搭建本地地图服务器(二)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/20/Ubuntu服务器部署笔记/" rel="prev" title="Ubuntu服务器部署笔记">
+                Ubuntu服务器部署笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/"
+     data-title="基于路网的出租车行驶最优路径的选择算法研究"
+     data-content=""
+     data-url="http://yoursite.com/2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/"
+           data-title="基于路网的出租车行驶最优路径的选择算法研究" data-url="http://yoursite.com/2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关研究工作"><span class="nav-number">3.</span> <span class="nav-text">相关研究工作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#研究背景与意义"><span class="nav-number">3.1.</span> <span class="nav-text">研究背景与意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文研究内容"><span class="nav-number">3.2.</span> <span class="nav-text">本文研究内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#出租车行驶最优路径的选择算法"><span class="nav-number">3.3.</span> <span class="nav-text">出租车行驶最优路径的选择算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于路网的出租车最优路径选择算法"><span class="nav-number">3.4.</span> <span class="nav-text">基于路网的出租车最优路径选择算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#算法框架"><span class="nav-number">3.4.1.</span> <span class="nav-text">算法框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#轨迹预处理"><span class="nav-number">3.4.2.</span> <span class="nav-text">轨迹预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#轨迹切割"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">轨迹切割</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#路网匹配"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">路网匹配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地标图构造"><span class="nav-number">3.4.3.</span> <span class="nav-text">地标图构造</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造地标图"><span class="nav-number">3.4.3.1.</span> <span class="nav-text">构造地标图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#行走时间估计"><span class="nav-number">3.4.3.2.</span> <span class="nav-text">行走时间估计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最优路径计算"><span class="nav-number">3.4.4.</span> <span class="nav-text">最优路径计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概略路径计算"><span class="nav-number">3.4.4.1.</span> <span class="nav-text">概略路径计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详细路径计算"><span class="nav-number">3.4.4.2.</span> <span class="nav-text">详细路径计算</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验评价与性能分析"><span class="nav-number">3.4.5.</span> <span class="nav-text">实验评价与性能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本章小结"><span class="nav-number">3.4.6.</span> <span class="nav-text">本章小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#出租车最优路径推荐系统设计"><span class="nav-number">4.</span> <span class="nav-text">出租车最优路径推荐系统设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统架构"><span class="nav-number">4.1.</span> <span class="nav-text">系统架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据管理模块"><span class="nav-number">4.2.</span> <span class="nav-text">数据管理模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#业务逻辑模块"><span class="nav-number">4.3.</span> <span class="nav-text">业务逻辑模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据可视化模块"><span class="nav-number">4.4.</span> <span class="nav-text">数据可视化模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统运行展示"><span class="nav-number">4.5.</span> <span class="nav-text">系统运行展示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本章小结-1"><span class="nav-number">4.6.</span> <span class="nav-text">本章小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结与展望"><span class="nav-number">5.</span> <span class="nav-text">总结与展望</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

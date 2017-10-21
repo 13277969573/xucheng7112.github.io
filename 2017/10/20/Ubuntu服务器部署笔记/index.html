@@ -1,0 +1,745 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ubuntu,PostgreSQL,MongoDB,ElasticSearch," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言最近的项目涉及到多源异构数据的存储问题，所以需要布置了一下服务器，主要记录PostgreSQL，MongoDB，ElasticSearch，Teamviewer等软件的安装问题。">
+<meta name="keywords" content="Ubuntu,PostgreSQL,MongoDB,ElasticSearch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu服务器部署笔记">
+<meta property="og:url" content="http://yoursite.com/2017/10/20/Ubuntu服务器部署笔记/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言最近的项目涉及到多源异构数据的存储问题，所以需要布置了一下服务器，主要记录PostgreSQL，MongoDB，ElasticSearch，Teamviewer等软件的安装问题。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/KapTVV7.png">
+<meta property="og:image" content="https://i.imgur.com/KG5dhHm.png">
+<meta property="og:image" content="https://i.imgur.com/7gooiNK.png">
+<meta property="og:image" content="https://i.imgur.com/2rrG8KY.png">
+<meta property="og:image" content="https://i.imgur.com/URL2ACV.png">
+<meta property="og:image" content="https://i.imgur.com/gvelKGq.png">
+<meta property="og:image" content="https://i.imgur.com/6i073ad.png">
+<meta property="og:image" content="https://i.imgur.com/HreBfER.png">
+<meta property="og:image" content="https://i.imgur.com/HsJ2JQn.png">
+<meta property="og:updated_time" content="2017-10-21T01:24:52.760Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu服务器部署笔记">
+<meta name="twitter:description" content="前言最近的项目涉及到多源异构数据的存储问题，所以需要布置了一下服务器，主要记录PostgreSQL，MongoDB，ElasticSearch，Teamviewer等软件的安装问题。">
+<meta name="twitter:image" content="https://i.imgur.com/KapTVV7.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/20/Ubuntu服务器部署笔记/"/>
+
+  <title> Ubuntu服务器部署笔记 | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Ubuntu服务器部署笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-10-20T21:00:47+08:00" content="2017-10-20">
+              2017-10-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术教程/" itemprop="url" rel="index">
+                    <span itemprop="name">技术教程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/10/20/Ubuntu服务器部署笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/10/20/Ubuntu服务器部署笔记/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近的项目涉及到多源异构数据的存储问题，所以需要布置了一下服务器，主要记录PostgreSQL，MongoDB，ElasticSearch，Teamviewer等软件的安装问题。<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>从头天中午开始尝试装Teamviewer到晚上把系统搞崩了…第二天只能重装系统，然后一切就顺利好多了。在此记录一下安装配置过程，以后说不定还要用。  </p>
+<blockquote>
+<p>系统环境ubuntu-16.04.2-desktop-amd64</p>
+</blockquote>
+<h2 id="JDk安装"><a href="#JDk安装" class="headerlink" title="JDk安装"></a>JDk安装</h2><p>ElasticSearch需要预装JDK，而且JDK是很常用的开发工具，所以先装一下。<br>在这里我们使用使用ppa/源方式安装JDK8<br>添加ppa<br><code>sudo add-apt-repository ppa:webupd8team/java</code> </p>
+<p><code>sudo apt-get update</code>  </p>
+<p>安装oracle-java-installer<br><code>sudo apt-get install oracle-java8-installer</code><br>中途会提示你确任，ok就行了</p>
+<p>将当前JDK设置为默认<br><code>sudo update-java-alternatives -s java-8-oracle</code></p>
+<p>测试JDK 是是否安装成功:<br><code>java -version</code></p>
+<p><code>javac -version</code></p>
+<h2 id="Teamviewer的安装"><a href="#Teamviewer的安装" class="headerlink" title="Teamviewer的安装"></a>Teamviewer的安装</h2><p>安装Teamviewer的原因是需要涉及到图形界面的操作，比如通过pgAdmin3来访问PostgreSQL，同时也能方便很多操作。但恰恰这个是个最大的坑….Ubuntu14.04上安装Teamviewer不太顺畅，搞了半天虽然装上去了，后来不知怎么地服务器内核也崩了（扎心~~）。所以直接重装了Ubuntu16.04的版本。重装之后神清气爽！用什么都舒服了，输什么指令都不会莫名其妙报错了！所以接下里Teamviewer的安装就顺畅到不行，双击安装就好了 (´・ω・`)  </p>
+<p>首先，我们去<a href="https://www.teamviewer.com/zhcn/download/linux/" target="_blank" rel="external">Teamviewer官网</a>下载linux版本的安装包<br><img src="https://i.imgur.com/KapTVV7.png" alt=""><br>然后直接双击下载好的安装包，就会自动进入ubuntu的软件安装中心安装<br><img src="https://i.imgur.com/KG5dhHm.png" alt=""><br>然后就可以打开软件登陆啦，超简单！ 记住还是不要踩14.04的坑，有时候真的不是你的操作的问题…</p>
+<h2 id="PostgreSQL-pgAdmin3的安装"><a href="#PostgreSQL-pgAdmin3的安装" class="headerlink" title="PostgreSQL+pgAdmin3的安装"></a>PostgreSQL+pgAdmin3的安装</h2><p>首先打开终端，输入以下命令下载PostgreSQL<br><code>sudo apt install postgresql-9.5</code>  </p>
+<p>同时安装pgAdmin3<br><code>sudo apt install pgadmin3</code></p>
+<p>这时候PostgreSQL就已经安装成功并开始运行了，接下来我们要修改默认用户postgres的密码<br><code>sudo -u postgres psql template1</code></p>
+<p>继续输入以下命令修改密码（一定要加分号，因为是sql语句）<br><code>ALTER USER postgres with encrypted password &#39;your_password&#39;;</code></p>
+<p>输入以下命令退出postgreSQL<br><code>\q</code></p>
+<p>这时候我们打开图形化界面pgAdmin3访问PostgreSQL,点击界面左上角的连接图标，输入如下参数：</p>
+<blockquote>
+<p>名称      随便<br>主机名    localhost<br>服务    空<br>维护数据库    postgres<br>用户    postgres<br>密码    你刚刚的密码  </p>
+</blockquote>
+<p>然后就能成功连接啦，就可以操作数据库了<br><img src="https://i.imgur.com/7gooiNK.png" alt=""></p>
+<h2 id="MongoDB的安装"><a href="#MongoDB的安装" class="headerlink" title="MongoDB的安装"></a>MongoDB的安装</h2><p>安装超简单….  </p>
+<p>打开终端，输入以下命令：<br><code>sudo apt-get install mongodb</code>  </p>
+<p>安装完成后，在终端输入以下命令查看MongoDB版本：<br><code>mongo -version</code></p>
+<p>输出版本信息，表明安装成功，截图如下：<br><img src="https://i.imgur.com/2rrG8KY.png" alt=""></p>
+<p>启动和关闭mongodb命令如下：<br><code>service mongodb start</code><br><code>service mongodb stop</code> </p>
+<p>输入mongo进入shell命令模式，默认连接的数据库是test数据库，在此之前一定要确保你已经启动了MongoDB，否则会出现错误，启动之后运行成功，如下截图：<br><img src="https://i.imgur.com/URL2ACV.png" alt=""><br>附带一些常用操作：</p>
+<blockquote>
+<ul>
+<li>show dbs:显示数据库列表   </li>
+<li>show collections：显示当前数据库中的集合（类似关系数据库中的表）   </li>
+<li>show users：显示用户    </li>
+<li>use dbname：切换当前数据库，这和MS-SQL里面的意思一样   </li>
+<li>db.help()：显示数据库操作命令，里面有很多的命令  </li>
+<li>db.foo.help()：显示集合操作命令，同样有很多的命令，foo指的是当前数据库下，一个叫foo的集合，并非真正意义上的命令   </li>
+<li>db.foo.find()：对于当前数据库中的foo集合进行数据查找（由于没有条件，会列出所有数据）   </li>
+<li>db.foo.find( { a : 1 } )：对于当前数据库中的foo集合进行查找，条件是数据中有一个属性叫a，且a的值为1 </li>
+</ul>
+</blockquote>
+<h2 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a>ElasticSearch</h2><p>ElasticSearch的安装更加简单，压根不要安装…<br>进入官网<a href="https://www.elastic.co/downloads/elasticsearch" target="_blank" rel="external">ElasticSearch</a>下载zip的压缩包并解压<br><img src="https://i.imgur.com/gvelKGq.png" alt="">  </p>
+<p><img src="https://i.imgur.com/6i073ad.png" alt=""></p>
+<p>进入当前目录，使用命令启动<br><code>bin/elasticSearch</code></p>
+<p>启动运行<br><img src="https://i.imgur.com/HreBfER.png" alt="">  </p>
+<p>访问’<a href="http://localhost:9200/&#39;进行测试" target="_blank" rel="external">http://localhost:9200/&#39;进行测试</a><br><img src="https://i.imgur.com/HsJ2JQn.png" alt=""><br>Bingo！</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ul>
+<li>只是简单的记录了一下安装的过程，如需使用的话还需要进一步发配置，例如数据库的访问，有时间再写。</li>
+<li>Ubuntu14.04好坑啊…说起来是稳定版，可是我觉得16.04的更好用，没毛病。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ubuntu/" rel="tag">#Ubuntu</a>
+          
+            <a href="/tags/PostgreSQL/" rel="tag">#PostgreSQL</a>
+          
+            <a href="/tags/MongoDB/" rel="tag">#MongoDB</a>
+          
+            <a href="/tags/ElasticSearch/" rel="tag">#ElasticSearch</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/03/基于路网的出租车行驶最优路径的选择算法研究/" rel="next" title="基于路网的出租车行驶最优路径的选择算法研究">
+                <i class="fa fa-chevron-left"></i> 基于路网的出租车行驶最优路径的选择算法研究
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/10/20/Ubuntu服务器部署笔记/"
+     data-title="Ubuntu服务器部署笔记"
+     data-content=""
+     data-url="http://yoursite.com/2017/10/20/Ubuntu服务器部署笔记/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/10/20/Ubuntu服务器部署笔记/"
+           data-title="Ubuntu服务器部署笔记" data-url="http://yoursite.com/2017/10/20/Ubuntu服务器部署笔记/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDk安装"><span class="nav-number">2.1.</span> <span class="nav-text">JDk安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Teamviewer的安装"><span class="nav-number">2.2.</span> <span class="nav-text">Teamviewer的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PostgreSQL-pgAdmin3的安装"><span class="nav-number">2.3.</span> <span class="nav-text">PostgreSQL+pgAdmin3的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MongoDB的安装"><span class="nav-number">2.4.</span> <span class="nav-text">MongoDB的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">2.5.</span> <span class="nav-text">ElasticSearch</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">3.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,Postgresql,Geoserver," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言由于网络地图服务器的不稳定以及实验需要，老师要求我搭建了一个本地的地图服务器用于数据可视化，方便组员使用。">
+<meta name="keywords" content="Java,Postgresql,Geoserver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Postgresql+Geoserver搭建本地地图服务器(一)">
+<meta property="og:url" content="http://yoursite.com/2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言由于网络地图服务器的不稳定以及实验需要，老师要求我搭建了一个本地的地图服务器用于数据可视化，方便组员使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.imgur.com/oBskEr0.png">
+<meta property="og:image" content="http://i.imgur.com/QWEViNl.png">
+<meta property="og:image" content="http://i.imgur.com/6ZOJTOW.png">
+<meta property="og:image" content="http://i.imgur.com/Zm6ZD9m.png">
+<meta property="og:image" content="http://i.imgur.com/XDXC84u.png">
+<meta property="og:image" content="http://i.imgur.com/lw4O2DL.png">
+<meta property="og:image" content="http://i.imgur.com/i9f660S.png">
+<meta property="og:image" content="http://i.imgur.com/uujK4a4.png">
+<meta property="og:image" content="http://i.imgur.com/lnXdlt1.png">
+<meta property="og:image" content="http://i.imgur.com/hjxIsBO.png">
+<meta property="og:image" content="http://i.imgur.com/O3TfcLF.png">
+<meta property="og:image" content="http://i.imgur.com/pQfIonB.png">
+<meta property="og:image" content="http://i.imgur.com/WGdxDHG.png">
+<meta property="og:image" content="http://i.imgur.com/CyqYES8.png">
+<meta property="og:image" content="http://i.imgur.com/arZIFXo.png">
+<meta property="og:image" content="http://i.imgur.com/reLoO2L.png">
+<meta property="og:image" content="http://i.imgur.com/WfVPSpE.png">
+<meta property="og:image" content="http://i.imgur.com/tCYfS1I.png">
+<meta property="og:image" content="http://i.imgur.com/iBkoprU.png">
+<meta property="og:image" content="http://i.imgur.com/zFWZkIX.png">
+<meta property="og:image" content="http://i.imgur.com/cGyLP6p.png">
+<meta property="og:image" content="http://i.imgur.com/aH1EW17.png">
+<meta property="og:image" content="http://i.imgur.com/RfKGSnp.png">
+<meta property="og:image" content="http://i.imgur.com/rcPKcMc.png">
+<meta property="og:image" content="http://i.imgur.com/uwtgUI1.png">
+<meta property="og:image" content="http://i.imgur.com/yjrCXWa.png">
+<meta property="og:image" content="http://i.imgur.com/HfpC1a6.png">
+<meta property="og:image" content="http://i.imgur.com/qZ0wbTu.png">
+<meta property="og:image" content="http://i.imgur.com/vnCj4N3.png">
+<meta property="og:image" content="http://i.imgur.com/F9WnVQX.png">
+<meta property="og:image" content="http://i.imgur.com/5S5imt7.png">
+<meta property="og:image" content="http://i.imgur.com/4RDlsVy.png">
+<meta property="og:image" content="http://i.imgur.com/ATQOSNg.png">
+<meta property="og:image" content="http://i.imgur.com/lOnafEN.png">
+<meta property="og:image" content="http://i.imgur.com/KEdeAPK.png">
+<meta property="og:image" content="http://i.imgur.com/kDsUvgc.png">
+<meta property="og:image" content="http://i.imgur.com/BV4FcsQ.png">
+<meta property="og:image" content="http://i.imgur.com/2Y9ULzD.png">
+<meta property="og:image" content="http://i.imgur.com/ncGBGwg.png">
+<meta property="og:image" content="http://i.imgur.com/HtQn0Dk.png">
+<meta property="og:image" content="http://i.imgur.com/Dvf4fwW.png">
+<meta property="og:image" content="http://i.imgur.com/Z4rroT5.png">
+<meta property="og:image" content="http://i.imgur.com/EFn7Iog.png">
+<meta property="og:image" content="http://i.imgur.com/z90DdfU.png">
+<meta property="og:image" content="http://i.imgur.com/omr0PPy.jpg">
+<meta property="og:updated_time" content="2017-02-26T05:05:50.584Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Postgresql+Geoserver搭建本地地图服务器(一)">
+<meta name="twitter:description" content="前言由于网络地图服务器的不稳定以及实验需要，老师要求我搭建了一个本地的地图服务器用于数据可视化，方便组员使用。">
+<meta name="twitter:image" content="http://i.imgur.com/oBskEr0.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/"/>
+
+  <title> Postgresql+Geoserver搭建本地地图服务器(一) | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Postgresql+Geoserver搭建本地地图服务器(一)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-21T14:36:33+08:00" content="2017-02-21">
+              2017-02-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术教程/" itemprop="url" rel="index">
+                    <span itemprop="name">技术教程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于网络地图服务器的不稳定以及实验需要，老师要求我搭建了一个本地的地图服务器用于数据可视化，方便组员使用。<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>我采用的是<a href="https://www.postgresql.org/" target="_blank" rel="external">Postgresql</a>+<a href="http://blog.geoserver.org/" target="_blank" rel="external">Geoserver</a>搭建的本地服务器。<br>搭建环境要求：</p>
+<blockquote>
+<ul>
+<li>Postgresql——Postgresql是一种对象关系型数据库。</li>
+<li>osm2pgsql——是由OpenStreetMap开发的一个命令行工具负责将OSM数据导入到基于PostgresSql的Postgis的数据库中，这样GeoServer才能调用数据发布服务器。其次我们还要指定osm2pgsql的gitHub地址因为我们需要的两个文件在里面可以找到一个是900913.sql一个是default.style。</li>
+<li>postgis (可选)——是一个空间数据库，它扩展自Postgresql对象关系型数据库，它添加了地理信息对象通过本地的SQL查询。因为在安装Postgresql是可以选择下载安装postgis所以它是可选的。</li>
+<li>GeoServer——是一种有java开发的地理信息发布服务工具 </li>
+</ul>
+</blockquote>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="安装Postgresql和PostGIS"><a href="#安装Postgresql和PostGIS" class="headerlink" title="安装Postgresql和PostGIS"></a>安装Postgresql和PostGIS</h2><p>postgresql-9.3.1-1-windows-x64.exe下载完成后双击开始安装。<br><img src="http://i.imgur.com/oBskEr0.png" alt="">  </p>
+<p>设置一下安装路径和数据库的超级管理员postgres的密码<br><img src="http://i.imgur.com/QWEViNl.png" alt=""></p>
+<p>完成后到这一步，一定要选中复选框（画红框的），点击完成<br><img src="http://i.imgur.com/6ZOJTOW.png" alt=""></p>
+<p>来到这一步，按图中的选择，点击下一步<br><img src="http://i.imgur.com/Zm6ZD9m.png" alt=""></p>
+<p>选择图中划框的部分，点击下一步<br><img src="http://i.imgur.com/XDXC84u.png" alt=""></p>
+<p>图中画框的部分是修改下载路径，点击下一步，开始下载<br><img src="http://i.imgur.com/lw4O2DL.png" alt=""></p>
+<p>点击下一步<br><img src="http://i.imgur.com/i9f660S.png" alt=""></p>
+<p>进入PostGis安装界面：点击I Agree<br><img src="http://i.imgur.com/uujK4a4.png" alt=""></p>
+<p>点击下一步<br><img src="http://i.imgur.com/lnXdlt1.png" alt=""></p>
+<p>设置用户名、密码和端口，填写密码其他保持不变。下一步<br><img src="http://i.imgur.com/hjxIsBO.png" alt=""></p>
+<p>保持默认，下一步<br><img src="http://i.imgur.com/O3TfcLF.png" alt=""></p>
+<p>设置环境变量，点击【是】<br><img src="http://i.imgur.com/pQfIonB.png" alt=""></p>
+<p>安装完成，点击【Close】,到这一步就安装完成拉。<br><img src="http://i.imgur.com/WGdxDHG.png" alt=""></p>
+<p>在开始菜单中找到pgAdmin III如下图:<br><img src="http://i.imgur.com/CyqYES8.png" alt=""></p>
+<p>单击，会打开Postgresql的管理工具<br><img src="http://i.imgur.com/arZIFXo.png" alt=""></p>
+<p>在有红叉的地方右键点击【连接】弹出输入密码的对话框，输入密码，点击【确定】<br><img src="http://i.imgur.com/reLoO2L.png" alt=""></p>
+<p>数据库就连接上了(●’◡’●)<br><img src="http://i.imgur.com/WfVPSpE.png" alt=""><br>到此Postgresql和Postgis就安装完成了，为了在命令中使用方便我们把Postgresql的bin目录添加到环境变量中。（如何设置环境变量可以百度一下，也可以不设置）</p>
+<h2 id="安装osm2pgsql"><a href="#安装osm2pgsql" class="headerlink" title="安装osm2pgsql"></a>安装osm2pgsql</h2><p>osm2pgsql是一个绿色软件，我找一个解压就可以了，解压完成后进入到osm2pgsql/x64或者Win32是你安装的Postgresql而定。（只需要解压就可以了，后面再命令行里进入这个文件夹，然后就可运行了）</p>
+<h2 id="OSM数据导入Postgresql数据库"><a href="#OSM数据导入Postgresql数据库" class="headerlink" title="OSM数据导入Postgresql数据库"></a>OSM数据导入Postgresql数据库</h2><h3 id="第一步：创建一个Postgresql的数据库"><a href="#第一步：创建一个Postgresql的数据库" class="headerlink" title="第一步：创建一个Postgresql的数据库"></a>第一步：创建一个Postgresql的数据库</h3><p>打开命令行输入<br><code>createdb -U postgres -E UTF8 osm</code><br>(如果没有设置环境变量需要先进入到PostgreSQL安装文件/PostgreSQL/9.3/bin/文件夹下,后面的命令全都是在此目录中)， 其中osm是数据库的名称，postgres是数据库的用户名。执行完成后我们打开pgAdmin III客户端刷新，就可以看到刚才创建的数据库。（若出现用户“….”认证失败，则需要先登录数据库psql –U postgres ）<br><img src="http://i.imgur.com/tCYfS1I.png" alt=""></p>
+<h3 id="第二步：安装language-plpgsql"><a href="#第二步：安装language-plpgsql" class="headerlink" title="第二步：安装language plpgsql"></a>第二步：安装language plpgsql</h3><p>执行如下命令：<br><code>createlang -U postgres plpgsql osm</code>  </p>
+<p>一般这一步都不需要，默认已经安装上去了<br><img src="http://i.imgur.com/iBkoprU.png" alt=""> </p>
+<p>在数据库的【拓展】节点可以看到<br><img src="http://i.imgur.com/zFWZkIX.png" alt=""></p>
+<h3 id="第三步：添加PostGIS功能到数据库"><a href="#第三步：添加PostGIS功能到数据库" class="headerlink" title="第三步：添加PostGIS功能到数据库"></a>第三步：添加PostGIS功能到数据库</h3><p>执行如下命令：<br><code>psql -U postgres -d osm -f “你PostgreSQL安装路径/share/contrib/postgis-2.1/postgis.sql”</code><br>默认安装路径为：C:\Program Files\PostgreSQL\9.5\share,控制台会打印如下一些命令。<br><img src="http://i.imgur.com/cGyLP6p.png" alt=""><br>表示安装完成</p>
+<h3 id="第四步：添加EPSG-900913支持"><a href="#第四步：添加EPSG-900913支持" class="headerlink" title="第四步：添加EPSG: 900913支持"></a>第四步：添加EPSG: 900913支持</h3><p>上面提到过在osm2pgsql的github上包含900013.sql的文件下载到本地。放到一个好访问的目录中，执行如下命令：<br><code>psql -U postgres -d osm -f “本地的文件路径/900913.sql”</code><br><img src="http://i.imgur.com/aH1EW17.png" alt=""></p>
+<h3 id="第五步：添加OSM数据到数据库"><a href="#第五步：添加OSM数据到数据库" class="headerlink" title="第五步：添加OSM数据到数据库"></a>第五步：添加OSM数据到数据库</h3><p>下载github上的osm2pgsql中的default.style文件并拷贝到本地osm2pgsql的x64目录中，把下载的beijing.osm.bz2（已经提供）文件解压得到的beijing.osm文件也拷贝到osm2pgsql的x64目录中。<br>新打开一个命令行进入osm2pgsql的x64目录中，执行如下命令：<br><code>osm2pgsql -U postgres -d osm -s -S ./default.style ./beijing.osm</code><br>一般情况下会报一个”Error reading style file line 151 (fields=4) flag ‘phstore’ is invalid in non-hstore mode“的错误，如下截图<br><img src="http://i.imgur.com/RfKGSnp.png" alt=""></p>
+<p>这说明确实hstore表示所以我们需要添加这个标识。打开pgAdmin III ，选中当前osm数据库，点击工具栏中的SQL标识<br><img src="http://i.imgur.com/rcPKcMc.png" alt="">  </p>
+<p>在弹出的SQL编辑器中输入：<code>create extension hstore;</code>命令点击顶部工具栏中的<br><img src="http://i.imgur.com/uwtgUI1.png" alt="">  </p>
+<p>图中画框的按钮。控制台会输出“[QUERY    ] create extension hstore “表示hstore扩展已经添加成功，在pgAdmin III的数据库拓展中可以看到。<br><img src="http://i.imgur.com/yjrCXWa.png" alt=""></p>
+<p>还需要为命令添加一个<code>“–hstore “选项 完整的执行命令是：“osm2pgsql –k –d osm –U postgres –S  ./default.style  ./Beijing.osm “</code>这样就正确了。(与原博客不同，原来无法运行，会报错)  </p>
+<p>正在导入中，但不知道为啥，会有乱码<br><img src="http://i.imgur.com/HfpC1a6.png" alt=""></p>
+<p>导入成功！<br><img src="http://i.imgur.com/qZ0wbTu.png" alt=""></p>
+<h2 id="GeoServer安装与配置"><a href="#GeoServer安装与配置" class="headerlink" title="GeoServer安装与配置"></a>GeoServer安装与配置</h2><h3 id="java运行环境"><a href="#java运行环境" class="headerlink" title="java运行环境"></a>java运行环境</h3><blockquote>
+<ul>
+<li>GeoServer是一个java应用程序，因此需要安装java运行环境。 </li>
+<li>从java官网<a href="http://java.sun.com/javase/downloads/" target="_blank" rel="external">http://java.sun.com/javase/downloads/</a> 下载jre_7u1-windows-i586.exe  点击安装jdk</li>
+</ul>
+</blockquote>
+<h3 id="GeoServer安装"><a href="#GeoServer安装" class="headerlink" title="GeoServer安装"></a>GeoServer安装</h3><p>GeoServer既可以以window服务形式安装，也可以作为应用软件来安装。<br>从官网<a href="http://geoserver.org" target="_blank" rel="external">http://geoserver.org/</a>下载最新geoServer版本geoserver-2.3.4exe<br><img src="http://i.imgur.com/vnCj4N3.png" alt=""></p>
+<p>一直下一步，到选择当前java运行环境，点击next继续<br><img src="http://i.imgur.com/F9WnVQX.png" alt=""></p>
+<p>GeoServer提供一个web基本配置来让你远程管理应用，默认账号（admin和geoserver）<br><img src="http://i.imgur.com/5S5imt7.png" alt=""></p>
+<p>选择Install as a service。（service是要通过浏览器打开，默认的是当做应用软件打开，都可以选择）<br><img src="http://i.imgur.com/4RDlsVy.png" alt=""></p>
+<p>检查设置，点击install完成<br><img src="http://i.imgur.com/ATQOSNg.png" alt=""></p>
+<p>安装成功<br><img src="http://i.imgur.com/lOnafEN.png" alt=""></p>
+<h2 id="把数据添加到GeoServer中并发布成WMS服务"><a href="#把数据添加到GeoServer中并发布成WMS服务" class="headerlink" title="把数据添加到GeoServer中并发布成WMS服务"></a>把数据添加到GeoServer中并发布成WMS服务</h2><p>打开GeoSever（如果安装是service，使用浏览输入<a href="http://localhost:8080/geoserver/web/即可），使用admin和geoserver登录" target="_blank" rel="external">http://localhost:8080/geoserver/web/即可），使用admin和geoserver登录</a></p>
+<h3 id="第一步：创建一个工作空间"><a href="#第一步：创建一个工作空间" class="headerlink" title="第一步：创建一个工作空间"></a>第一步：创建一个工作空间</h3><p><img src="http://i.imgur.com/KEdeAPK.png" alt="">  </p>
+<p><img src="http://i.imgur.com/kDsUvgc.png" alt=""></p>
+<h3 id="第二步：创建数据存储"><a href="#第二步：创建数据存储" class="headerlink" title="第二步：创建数据存储"></a>第二步：创建数据存储</h3><p><img src="http://i.imgur.com/BV4FcsQ.png" alt=""></p>
+<p><img src="http://i.imgur.com/2Y9ULzD.png" alt=""></p>
+<p><img src="http://i.imgur.com/ncGBGwg.png" alt=""><br>就上述的内容需要修改，其他保持默认点击【保存】  </p>
+<p><img src="http://i.imgur.com/HtQn0Dk.png" alt=""><br>会列出数据库的图层列表，需要哪个图层就点击那个图层的【发布】  </p>
+<h3 id="第三步：发布数据"><a href="#第三步：发布数据" class="headerlink" title="第三步：发布数据"></a>第三步：发布数据</h3><p>比如我们要发布planet_osm_line的数据<br><img src="http://i.imgur.com/Dvf4fwW.png" alt=""></p>
+<p>完成后点击【保存】，可以看到我们发布的数据<br><img src="http://i.imgur.com/Z4rroT5.png" alt=""></p>
+<h3 id="第四步：预览数据"><a href="#第四步：预览数据" class="headerlink" title="第四步：预览数据"></a>第四步：预览数据</h3><p><img src="http://i.imgur.com/EFn7Iog.png" alt=""></p>
+<p>我们会看到首页发布的图层，也可以看到我们发布的图层。<br><img src="http://i.imgur.com/z90DdfU.png" alt=""></p>
+<p>点击OpenLayers打开预览<br><img src="http://i.imgur.com/omr0PPy.jpg" alt=""></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ol>
+<li>整个过程还是比较顺利的，没出什么大问题  </li>
+<li>下一篇将介绍如何将自己的轨迹数据导入数据库进行展示和如何同时展现多个图层</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/Postgresql/" rel="tag">#Postgresql</a>
+          
+            <a href="/tags/Geoserver/" rel="tag">#Geoserver</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/" rel="next" title="Java重现NEAT Road Network Aware Trajectory Clustering论文实验">
+                <i class="fa fa-chevron-left"></i> Java重现NEAT Road Network Aware Trajectory Clustering论文实验
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/26/Postgresql+Geoserver搭建本地地图服务器(二)/" rel="prev" title="Postgresql+Geoserver搭建本地地图服务器(二)">
+                Postgresql+Geoserver搭建本地地图服务器(二) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/"
+     data-title="Postgresql+Geoserver搭建本地地图服务器(一)"
+     data-content=""
+     data-url="http://yoursite.com/2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/"
+           data-title="Postgresql+Geoserver搭建本地地图服务器(一)" data-url="http://yoursite.com/2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Postgresql和PostGIS"><span class="nav-number">3.1.</span> <span class="nav-text">安装Postgresql和PostGIS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装osm2pgsql"><span class="nav-number">3.2.</span> <span class="nav-text">安装osm2pgsql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OSM数据导入Postgresql数据库"><span class="nav-number">3.3.</span> <span class="nav-text">OSM数据导入Postgresql数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：创建一个Postgresql的数据库"><span class="nav-number">3.3.1.</span> <span class="nav-text">第一步：创建一个Postgresql的数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：安装language-plpgsql"><span class="nav-number">3.3.2.</span> <span class="nav-text">第二步：安装language plpgsql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：添加PostGIS功能到数据库"><span class="nav-number">3.3.3.</span> <span class="nav-text">第三步：添加PostGIS功能到数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四步：添加EPSG-900913支持"><span class="nav-number">3.3.4.</span> <span class="nav-text">第四步：添加EPSG: 900913支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第五步：添加OSM数据到数据库"><span class="nav-number">3.3.5.</span> <span class="nav-text">第五步：添加OSM数据到数据库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GeoServer安装与配置"><span class="nav-number">3.4.</span> <span class="nav-text">GeoServer安装与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#java运行环境"><span class="nav-number">3.4.1.</span> <span class="nav-text">java运行环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GeoServer安装"><span class="nav-number">3.4.2.</span> <span class="nav-text">GeoServer安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#把数据添加到GeoServer中并发布成WMS服务"><span class="nav-number">3.5.</span> <span class="nav-text">把数据添加到GeoServer中并发布成WMS服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：创建一个工作空间"><span class="nav-number">3.5.1.</span> <span class="nav-text">第一步：创建一个工作空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：创建数据存储"><span class="nav-number">3.5.2.</span> <span class="nav-text">第二步：创建数据存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：发布数据"><span class="nav-number">3.5.3.</span> <span class="nav-text">第三步：发布数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四步：预览数据"><span class="nav-number">3.5.4.</span> <span class="nav-text">第四步：预览数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

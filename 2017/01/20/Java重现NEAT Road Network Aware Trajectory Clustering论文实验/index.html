@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,数据挖掘,轨迹处理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言读了一篇基于路网的轨迹挖掘论文，按照老师的要求重现了一下。由于考试周，断断续续写了挺久，现在来总结一下。">
+<meta name="keywords" content="Java,数据挖掘,轨迹处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java重现NEAT Road Network Aware Trajectory Clustering论文实验">
+<meta property="og:url" content="http://yoursite.com/2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言读了一篇基于路网的轨迹挖掘论文，按照老师的要求重现了一下。由于考试周，断断续续写了挺久，现在来总结一下。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.imgur.com/po53rTl.png">
+<meta property="og:image" content="http://i.imgur.com/cZwDj8I.png">
+<meta property="og:image" content="http://i.imgur.com/Sh6fSTk.png">
+<meta property="og:image" content="http://i.imgur.com/lXWtKkn.png">
+<meta property="og:image" content="http://i.imgur.com/vUNk4X0.png">
+<meta property="og:image" content="http://i.imgur.com/wJxIPE8.png">
+<meta property="og:image" content="http://i.imgur.com/15ewcMY.png">
+<meta property="og:image" content="http://i.imgur.com/LQsFJod.png">
+<meta property="og:image" content="http://i.imgur.com/GXKbZeI.png">
+<meta property="og:updated_time" content="2017-01-22T07:52:56.533Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java重现NEAT Road Network Aware Trajectory Clustering论文实验">
+<meta name="twitter:description" content="前言读了一篇基于路网的轨迹挖掘论文，按照老师的要求重现了一下。由于考试周，断断续续写了挺久，现在来总结一下。">
+<meta name="twitter:image" content="http://i.imgur.com/po53rTl.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/"/>
+
+  <title> Java重现NEAT Road Network Aware Trajectory Clustering论文实验 | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java重现NEAT Road Network Aware Trajectory Clustering论文实验
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-20T15:27:40+08:00" content="2017-01-20">
+              2017-01-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实战经验/" itemprop="url" rel="index">
+                    <span itemprop="name">实战经验</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>读了一篇基于路网的轨迹挖掘论文，按照老师的要求重现了一下。由于考试周，断断续续写了挺久，现在来总结一下。<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>匆匆忙忙的进入了研究生阶段的学习，一时间还有些不适应。对研究方向也是从一窍不通到现在能入门了。这是我看的第一篇本方向的论文。我感觉还是很容易明白的。老师叫我看了很久，突然有一天说叫我实验重现一下，我一开始是懵逼的，毕竟这和以前自己写写程序不一样。写的过程还算顺利，虽然遇到很多坑，下面慢慢说。</p>
+<h2 id="论文概述"><a href="#论文概述" class="headerlink" title="论文概述"></a>论文概述</h2><p>简要的介绍一下论文的大概框架和流程。这篇论文的中心思想是：通过处理大量轨迹，借助路网这一工具进行频繁轨迹的挖掘。下面分三个阶段介绍论文核心算法。</p>
+<h3 id="阶段一：形成基本簇"><a href="#阶段一：形成基本簇" class="headerlink" title="阶段一：形成基本簇"></a>阶段一：形成基本簇</h3><blockquote>
+<p>输入：{TR1,TR2,…,TRN}    //TR为点轨迹序列的集合<br>输出：{S0,S1,…,SN}    //S为基本簇的集合  </p>
+</blockquote>
+<p>左图是一张路网地图，存储形式为图（V，E），图上有N条输入的轨迹。右图显示第一阶段的输出结果：基本簇的集合。那么什么是基本簇呢？可以简单的理解为路网上的每一条路段就是一个簇，N条轨迹被根据路段进行切割，然后合并到对应的路段，形成基本簇的集合。如图，我们可以看到12个基本簇，每个簇上存储了很多的轨迹段，每条边对应的轨迹个数称为这个簇的密度。<br><img src="http://i.imgur.com/po53rTl.png" alt=""><br><strong>难点剖析：</strong></p>
+<blockquote>
+<ul>
+<li>路网匹配问题：目前为止我还没有看更多的算法，所以我采用的是最简单的死办法：遍历。计算每一个轨迹点到每条路线段的最<br>短距离，然后判断它属于哪一条路网，也就是哪一个簇。</li>
+<li>还是路网的匹配问题，我们知道由于采样率、误差等原因，匹配出来的轨迹肯定是不全的，中间会出现隔断，不能连成一条。一开始我的思路是：若匹配出来的轨迹不是连续的，则对不连续部分，采用匹配最短路径的方式来进行填补，最终形成完整的轨迹段。后来我发现在这么大规模的图上进行最短距离的计算传统的Flord和Dijkstra都不适用，我知道肯定有研究的论文，但是我没那么多时间现学。后来经过和学长的讨论，想到了更好的方法：对于不连续的部分，比如两条边E1和E2，计算他们俩距离最近的点的中点p，接着匹配p属于的边E3，看看E1，E2，E3能否连续。若不能对E1，E3和E2，E3分别再次取中点。这是一个典型的递归。写的过程中我发现各种各样的死循环，最后我考虑设置递归深度最大为4，以来防止死循环，二来我测试了一段数据，递归深度为4匹配后，连通率达到了70%。我觉得可以了，如果再深，时间复杂度将大大提高，程序很慢。</li>
+</ul>
+</blockquote>
+<h3 id="阶段二：形成路径流"><a href="#阶段二：形成路径流" class="headerlink" title="阶段二：形成路径流"></a>阶段二：形成路径流</h3><blockquote>
+<p>输入：{S0,S1,…,SN}<br>输出：{F0,F1,…,FN} // F={S0，S1，S2…..}F为基本簇的连续集合   </p>
+</blockquote>
+<p>在这一阶段，我们将每一个基本簇，通过一定得算法连接起来，从左图的12个基本簇，经过第二阶段，连接成了3个路径流F。<br>我们默认从密度最高的簇开始扩展。选当前簇的一个顶点，从与它相邻的簇中挑选要扩展的簇，我们考虑以下因素：</p>
+<p><img src="http://i.imgur.com/cZwDj8I.png" alt=""><br><strong>说明：</strong></p>
+<blockquote>
+<ul>
+<li>流量：分母为经过当前簇的轨迹个数，分子为同时经过当前簇和待扩展簇的轨迹个数。</li>
+<li>密度：分母为当前簇和所有邻居簇的密度的和，分子为待扩展簇的密度。</li>
+<li>速度：分母为所有邻居簇的速度和，分子为待扩展簇的速度。</li>
+</ul>
+</blockquote>
+<p>最终我们采用以下公式来挑选待扩展簇：<br><img src="http://i.imgur.com/Sh6fSTk.png" alt=""><br><strong>说明：</strong><br>我们限定Wq+Wk+Wv=1。例如我们想挑选流量为基础的簇，我们可以设置：Wq=1，Wk=0，Wv=0。以此我们可以调整参数来得到我们想要的结果。直到所有簇被选中或删除，算法结束。<br><img src="http://i.imgur.com/lXWtKkn.png" alt=""></p>
+<h3 id="阶段三：路径流优化"><a href="#阶段三：路径流优化" class="headerlink" title="阶段三：路径流优化"></a>阶段三：路径流优化</h3><blockquote>
+<p>输入：{F0,F1,…,FN}<br>输出：{F0,F1,…,FM}(N&gt;=M)    </p>
+</blockquote>
+<p>我们将地理位置上靠得很近的路径流合并成一条，我们考虑两条边四个顶点之间的距离为基础来合并，这就涉及到大规模图上点最短距离的计算。我们知道图上的算法耗时都很高，更不用说这张超大规模图的了。论文采用了Euclidean lower bound (ELB)来减少计算量。  任意两点之间距离肯定大于等于其欧氏距离，先计算欧氏距离，若小于合并要求的最小阈值，则计算图上真实距离，否则直接否弃。<br><img src="http://i.imgur.com/vUNk4X0.png" alt=""><br><img src="http://i.imgur.com/wJxIPE8.png" alt=""></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="数据源"><a href="#数据源" class="headerlink" title="数据源"></a>数据源</h3><p>地图数据：北京市路网地图，格式如下：edges(路段ID，起点ID，终点ID),vertices(点ID，经度，纬度）<br><img src="http://i.imgur.com/15ewcMY.png" alt=""></p>
+<p><img src="http://i.imgur.com/LQsFJod.png" alt=""></p>
+<p>轨迹数据：北京市出租车一个月轨迹，格式如下：车辆ID（车辆ID，触发事件，运营状态，GPS时间，GPS经度，GPS纬度，GPS速度，GPS方位，GPS状态）<br>(PS:老师扔给我的是一个8g的压缩包，解压完55个g我就懵逼了，后来自己写了个提取程序，扔在学长ubuntu的机子上跑了两天解压出来大概11个g，拿回来我又懵逼了，linux和windows换行符不同，所以拿到我电脑上全乱了…..)<br><img src="http://i.imgur.com/GXKbZeI.png" alt=""></p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">public class Graph </div><div class="line">&#123;  </div><div class="line">	public Graph(String edgeFile, String nodeFile)   // 根据点和边文件初始化路网</div><div class="line">	</div><div class="line">	//算法第一部分</div><div class="line">	public HashMap&lt;Integer, Integer&gt; getBaseCluster(String carID)   //对每一条轨迹进行处理</div><div class="line">	&#123;</div><div class="line">		for each node in TR:</div><div class="line">			getNearEdge(node)   //计算点属于的边</div><div class="line">		for each edge in TRList:</div><div class="line">			getExtraWay(edge[i],edge[i+1])    //对轨迹段进行补全</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//算法第二部分</div><div class="line">	public List&lt;ArrayList&gt; getFlowCluster(int min)</div><div class="line">	&#123;</div><div class="line">		while ((e = getMaxDensity()) != null) // 获取密度最大的边</div><div class="line">		&#123; </div><div class="line">			new flow;</div><div class="line">			flow.add(e);</div><div class="line">			extrendFlowCluster(e, e.getStartNode(), flow);   //递归扩展</div><div class="line">			extrendFlowCluster(e, e.getEndNode(), flow);</div><div class="line">			flowresult.add(flow);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//算法第三部分</div><div class="line">	public List&lt;ArrayList&gt; refineFlowCluster()</div><div class="line">	&#123;</div><div class="line">		for f2 flow:</div><div class="line">			for f2 flow:</div><div class="line">				if (isnear(f1,f2)):     //靠近则合并</div><div class="line">					f1=f1+f2</div><div class="line">					delete f2</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>由于我路网服务器还没开始搭建，所以这里做不了可视化分析。而且一开始我采用的单核程序，跑的特别慢，到手的处理结果大概有一百多条处理的轨迹，前几天我把算法改成了多线程的，可是暂时没有服务器能跑的。我用这一百多条轨迹尝试做了轨迹聚类，最后结果还不错看上去。设置密度最低为20，聚出来的路径流长度最高能达到70，长度20以上的路径流有四十多条。好吧，一百多条轨迹实在是太少了，没办法。我现在算法已经改完了，就等放到服务器上去，多跑一点数据出来，这样实验效果能更好。</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ol>
+<li><p>看论文的时候觉得条理清晰，因为这篇论文写的也很清楚，层次分明，可是自己做实验才发现很多细节没有考虑过，或者考虑清楚。老师说的先把架构理清楚，数据类型，接口定义好，现在想想还是很有道理的，定好了写起来真的是快。不过我想的不够清楚，到后期还一直在改代码。所以项目有点拖拉。</p>
+</li>
+<li><p>对大数据的处理，很多平时写代码不会出现的问题，可是一到处理大数据，就不一样了。就像我开始想的计算最短距离，实现起来才发现不是自己能搞定的。以前写代码不太会考虑时间问题，现在感觉不一样了，算法与算法之间的时间差别真的很大。</p>
+</li>
+</ol>
+<blockquote>
+<p>附源码地址：<a href="https://github.com/xucheng7112/RoadNet" target="_blank" rel="external">https://github.com/xucheng7112/RoadNet</a>   （JDK版本为1.8）</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+            <a href="/tags/数据挖掘/" rel="tag">#数据挖掘</a>
+          
+            <a href="/tags/轨迹处理/" rel="tag">#轨迹处理</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/18/Python实现一字棋算法/" rel="next" title="Python实现人工智能博弈树一字棋算法">
+                <i class="fa fa-chevron-left"></i> Python实现人工智能博弈树一字棋算法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/21/Postgresql+Geoserver搭建本地地图服务器(一)/" rel="prev" title="Postgresql+Geoserver搭建本地地图服务器(一)">
+                Postgresql+Geoserver搭建本地地图服务器(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/"
+     data-title="Java重现NEAT Road Network Aware Trajectory Clustering论文实验"
+     data-content=""
+     data-url="http://yoursite.com/2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/"
+           data-title="Java重现NEAT Road Network Aware Trajectory Clustering论文实验" data-url="http://yoursite.com/2017/01/20/Java重现NEAT Road Network Aware Trajectory Clustering论文实验/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#论文概述"><span class="nav-number">2.1.</span> <span class="nav-text">论文概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段一：形成基本簇"><span class="nav-number">2.1.1.</span> <span class="nav-text">阶段一：形成基本簇</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段二：形成路径流"><span class="nav-number">2.1.2.</span> <span class="nav-text">阶段二：形成路径流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段三：路径流优化"><span class="nav-number">2.1.3.</span> <span class="nav-text">阶段三：路径流优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验"><span class="nav-number">2.2.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据源"><span class="nav-number">2.2.1.</span> <span class="nav-text">数据源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法设计"><span class="nav-number">2.2.2.</span> <span class="nav-text">算法设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">2.2.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">3.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,761 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,Flask,WSGI,Nginx," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言前几天因为课程作业需要，使用基于python的Flask框架实现了一个简单的网页，好吧代码太丑就不贴了。那么问题来了，如何实现Flask框架下web程序的部署？">
+<meta name="keywords" content="Python,Flask,WSGI,Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flask + WSGI + Nginx部署服务器">
+<meta property="og:url" content="http://yoursite.com/2016/12/16/Flask + WSGI + Nginx部署服务器/index.html">
+<meta property="og:site_name" content="脆脆的脆皮&#39;blog">
+<meta property="og:description" content="前言前几天因为课程作业需要，使用基于python的Flask框架实现了一个简单的网页，好吧代码太丑就不贴了。那么问题来了，如何实现Flask框架下web程序的部署？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-12-16T07:31:21.597Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flask + WSGI + Nginx部署服务器">
+<meta name="twitter:description" content="前言前几天因为课程作业需要，使用基于python的Flask框架实现了一个简单的网页，好吧代码太丑就不贴了。那么问题来了，如何实现Flask框架下web程序的部署？">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/16/Flask + WSGI + Nginx部署服务器/"/>
+
+  <title> Flask + WSGI + Nginx部署服务器 | 脆脆的脆皮'blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">脆脆的脆皮'blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Flask + WSGI + Nginx部署服务器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-16T09:45:28+08:00" content="2016-12-16">
+              2016-12-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术教程/" itemprop="url" rel="index">
+                    <span itemprop="name">技术教程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/16/Flask + WSGI + Nginx部署服务器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/16/Flask + WSGI + Nginx部署服务器/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前几天因为课程作业需要，使用基于python的<a href="http://www.pythondoc.com/flask/index.html" target="_blank" rel="external">Flask</a>框架实现了一个简单的网页，好吧代码太丑就不贴了。那么问题来了，如何实现Flask框架下web程序的部署？<br><a id="more"></a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>很早就入手了一台腾讯云的服务器，一直空着没怎么用，这下终于派上用场了。而且<a href="https://www.qcloud.com/act/campus" target="_blank" rel="external">学生价优惠</a>只要1元哟。装载镜像<em>Ubuntu Server 14.04.1 LTS 32位</em>。个人采用的服务器登陆软件为putty，文件传输软件为FlashFXP。</p>
+<p>我采用的部署方案是：</p>
+<blockquote>
+<ul>
+<li>Web 服务器采用 uwsgi host Flask</li>
+<li>用 Supervisor 引用 uwsgi 作常规启动服务</li>
+<li>基于 Nginx 作反向代理    </li>
+</ul>
+</blockquote>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="通过-putty-远程登录服务器"><a href="#通过-putty-远程登录服务器" class="headerlink" title="通过 putty 远程登录服务器"></a>通过 putty 远程登录服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">login as: 登陆名    </div><div class="line">ubuntu@XXX.XXX.XXX.XXX&apos;s password:密码</div></pre></td></tr></table></figure>
+<h2 id="安装-python-环境"><a href="#安装-python-环境" class="headerlink" title="安装 python 环境"></a>安装 python 环境</h2><p>接下来是python , Ubuntu 的默认环境已经预装 python 2.7 所以只需要安装 python 的 pip 安装工具即可。pip 用于安装一些基于python 应用的软件工具，在下文中将会频繁。<strong>一定要安装python-dev！！</strong>，都别问我在这上面坑了多久。</p>
+<p>使用指令：<br><code>ubuntu@ubuntu:~$ sudo apt-get install python-pip,python-dev</code></p>
+<h2 id="使用-virtualenv"><a href="#使用-virtualenv" class="headerlink" title="使用 virtualenv"></a>使用 virtualenv</h2><ol>
+<li>virtualenv 用来建立一个虚拟的python环境，一个专属于项目的python环境。用virtualenv 来保持一个干净的环境非常有用。</li>
+<li>pip 用来解决项目依赖问题。将项目所有依赖的第三方库写在一个requirements.txt 中用pip 批量安装。一般和virtualenv 配合使用，将所有包安装在virtualenv 的环境中。</li>
+</ol>
+<p>Virtualenv 能够做到：  </p>
+<blockquote>
+<ul>
+<li>在没有权限的情况下安装新套件</li>
+<li>不同应用可以使用不同的套件版本</li>
+<li>套件升级不影响其他应用</li>
+</ul>
+</blockquote>
+<p>安装：<br><code>ubuntu@ubuntu:~$ sudo pip install virtualenv</code></p>
+<p>安装后我们可以通过以下指令在当前目录下新建一个名为venv的虚拟环境：<br><code>ubuntu@ubuntu:~/flask$ virtualenv venv</code></p>
+<p>然后进入虚拟环境：<br><code>ubuntu@ubuntu:~/flask$ source venv/bin/activate</code><br><code>(venv)ubuntu@ubuntu:~/flask$</code></p>
+<p>然后只要看到指令最前端出现(venv) 就说明我们已经进入虚拟环境啦，可以用deactivate退出虚拟环境。</p>
+<h2 id="安装-Flask"><a href="#安装-Flask" class="headerlink" title="安装 Flask"></a>安装 Flask</h2><p>可以使用清单一次安装requirements.txt，我这里只列出常用的包，个人根据需要自己装：</p>
+<blockquote>
+<p>Flask==0.10.1<br>Flask-Login==0.2.11<br>Flask-Mail==0.9.1<br>Flask-SQLAlchemy==2.0<br>Flask-Script==2.0.5<br>Flask-WTF==0.10.2  </p>
+</blockquote>
+<p>然后使用命令一次安装：<br><code>(venv)ubuntu@ubuntu:~/flask$ pip install -r requirements.txt</code></p>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><blockquote>
+<p>│── flask<br>│   └── venv      //虚拟目录<br>│   └── app       //Flask 程序目录<br>│   ├── manage.py<br>│   ├── requirements.txt<br>│   ├── config.ini  </p>
+</blockquote>
+<h2 id="安装-uWSGI"><a href="#安装-uWSGI" class="headerlink" title="安装 uWSGI"></a>安装 uWSGI</h2><p>uWSGI是一个Web服务器，它实现了WSGI协议、uwsgi、http等协议。Nginx中HttpUwsgiModule的作用是与uWSGI服务器进行交换。</p>
+<p>因为装过了pip工具，接下来就简单多了:<br><code>(venv)ubuntu@ubuntu:~/flask$ pip install uwsgi</code></p>
+<h2 id="配置-uwsgi"><a href="#配置-uwsgi" class="headerlink" title="配置 uwsgi"></a>配置 uwsgi</h2><p>好了重要部分来了，config.ini 是这样写的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">//uwsgi 启动时所使用的地址与端口  </div><div class="line">socket = 127.0.0.1:8001 </div><div class="line"></div><div class="line">//指向网站目录  </div><div class="line">chdir = /home/www/ </div><div class="line"></div><div class="line">//python 启动程序文件  </div><div class="line">wsgi-file = manage.py </div><div class="line"></div><div class="line">//python 程序内用以启动的 application 变量名  </div><div class="line">callable = app </div><div class="line"></div><div class="line">//处理器数  </div><div class="line">processes = 4</div><div class="line"></div><div class="line">//线程数  </div><div class="line">threads = 2</div><div class="line"></div><div class="line">//状态检测地址  </div><div class="line">stats = 127.0.0.1:9191</div></pre></td></tr></table></figure></p>
+<p>写好了以后可以这样执行：<br><code>(venv)ubuntu@ubuntu:~/flask$ uwsgi config.ini</code></p>
+<p>运行 uwsgi<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[uWSGI] getting INI configuration from config.ini  </div><div class="line">Starting uWSGI 2.0.8 (64bit) on [Fri Dec 19 14:34:11 2014]   </div><div class="line">// 此处略去那些无用的启动信息  </div><div class="line">Stats server enabled on 127.0.0.1:9191 fd: 15</div></pre></td></tr></table></figure></p>
+<p>OK， 此时已经正常启动 uwsgi 并将 Flask 项目载入其中了，ctrl+c 关闭程序。但这只是命令启动形式，要使其随同服务器启动并作为后台服务运行才是运营环境的实际所需要。因此接下来我们需要安装另一个工具来引导 uwsgi 。此时可以退出虚拟环境了。</p>
+<h2 id="安装-Supervisor"><a href="#安装-Supervisor" class="headerlink" title="安装 Supervisor"></a>安装 Supervisor</h2><p><a href="http://supervisord.org/configuration.html" target="_blank" rel="external">Supervisor</a>可以同时启动多个应用，最重要的是，当某个应用Crash的时候，他可以自动重启该应用，保证可用性。<br><code>ubuntu@ubuntu:~$ sudo apt-get install supervisor</code></p>
+<p>Supervisor 的全局的配置文件位置在：<br><code>/etc/supervisor/supervisor.conf</code></p>
+<p>正常情况下我们并不需要去对其作出任何的改动，只需要添加一个新的 *.conf 文件放在<br><code>/etc/supervisor/conf.d/</code></p>
+<p>下就可以，那么我们就新建立一个用于启动 flask 项目的 uwsgi 的 supervisor 配置 (命名为：my_flask_supervisor.conf)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//启动命令入口  </div><div class="line">command=/home/www/my_flask/venv/bin/uwsgi /home/www/my_flask/config.ini  </div><div class="line"></div><div class="line">//命令程序所在目录  </div><div class="line">directory=/home/www/my_flask  </div><div class="line"></div><div class="line">//运行命令的用户名  </div><div class="line">user=root</div><div class="line">        </div><div class="line">autostart=true  </div><div class="line"></div><div class="line">autorestart=true  </div><div class="line"></div><div class="line">//日志地址  </div><div class="line">stdout_logfile=/home/www/my_flask/logs/uwsgi_supervisor.log</div></pre></td></tr></table></figure></p>
+<p>启动服务<br><code>ubuntu@ubuntu:~$ sudo service supervisor start</code></p>
+<p>终止服务<br><code>ubuntu@ubuntu:~$ sudo service supervisor stop</code></p>
+<h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><p><a href="http://nginx.com/" target="_blank" rel="external">Nginx</a>是轻量级、性能强、占用资源少，能很好的处理高并发的反向代理软件<br>安装Nginx<br><code>sudo apt-get install nginx</code></p>
+<h2 id="配置-Nginx"><a href="#配置-Nginx" class="headerlink" title="配置 Nginx"></a>配置 Nginx</h2><p>Ubuntu 上配置 Nginx 也是很简单，不要去改动默认的 nginx.conf 只需要将<br><code>/etc/nginx/sites-available/default</code><br>文件替换掉就可以了  </p>
+<p>新建一个 default 文件:   </p>
+<pre><code>server {  
+      listen  80;  
+      server_name XXX.XXX.XXX; #公网地址  
+
+      location / {  
+        include      uwsgi_params;
+        uwsgi_pass   127.0.0.1:8001;  # 指向uwsgi 所应用的内部地址,所有请求将转发给uwsgi 处理
+        uwsgi_param UWSGI_PYHOME /home/www/my_flask/venv; # 指向虚拟环境目录
+        uwsgi_param UWSGI_CHDIR  /home/www/my_flask; # 指向网站根目录
+        uwsgi_param UWSGI_SCRIPT manage:app; # 指定启动程序
+      }
+    }
+</code></pre><p>更改配置还需要记得重启一下nginx:<br><code>ubuntu@ubuntu:~$ sudo service nginx restart</code></p>
+<p>最后一步，启动uwsgi就大功告成啦<br><code>(venv)my_flask root$ uwsgi config.ini</code></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ol>
+<li><p>一步一步来，遇到问题就google</p>
+</li>
+<li><p>再次重申记得装python-dev!!</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+            <a href="/tags/Flask/" rel="tag">#Flask</a>
+          
+            <a href="/tags/WSGI/" rel="tag">#WSGI</a>
+          
+            <a href="/tags/Nginx/" rel="tag">#Nginx</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/04/Python实现Apriori算法/" rel="next" title="Python实现Apriori算法">
+                <i class="fa fa-chevron-left"></i> Python实现Apriori算法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/18/Python实现一字棋算法/" rel="prev" title="Python实现人工智能博弈树一字棋算法">
+                Python实现人工智能博弈树一字棋算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/16/Flask + WSGI + Nginx部署服务器/"
+     data-title="Flask + WSGI + Nginx部署服务器"
+     data-content=""
+     data-url="http://yoursite.com/2016/12/16/Flask + WSGI + Nginx部署服务器/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/16/Flask + WSGI + Nginx部署服务器/"
+           data-title="Flask + WSGI + Nginx部署服务器" data-url="http://yoursite.com/2016/12/16/Flask + WSGI + Nginx部署服务器/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="xucheng" />
+          <p class="site-author-name" itemprop="name">xucheng</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xucheng7112" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3642963754?is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:me@fanxinyue.cn" target="_blank" title="E-mail">
+                  
+                    <i class="fa fa-fw fa-envelope-o"></i>
+                  
+                  E-mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-putty-远程登录服务器"><span class="nav-number">3.1.</span> <span class="nav-text">通过 putty 远程登录服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-python-环境"><span class="nav-number">3.2.</span> <span class="nav-text">安装 python 环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-virtualenv"><span class="nav-number">3.3.</span> <span class="nav-text">使用 virtualenv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Flask"><span class="nav-number">3.4.</span> <span class="nav-text">安装 Flask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目结构"><span class="nav-number">3.5.</span> <span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-uWSGI"><span class="nav-number">3.6.</span> <span class="nav-text">安装 uWSGI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-uwsgi"><span class="nav-number">3.7.</span> <span class="nav-text">配置 uwsgi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Supervisor"><span class="nav-number">3.8.</span> <span class="nav-text">安装 Supervisor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Nginx"><span class="nav-number">3.9.</span> <span class="nav-text">安装 Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-Nginx"><span class="nav-number">3.10.</span> <span class="nav-text">配置 Nginx</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xucheng</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"xucheng7112"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
